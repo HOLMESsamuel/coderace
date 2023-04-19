@@ -1,25 +1,21 @@
 use std::{fs, io};
 use std::path::{Path, PathBuf};
+use crate::models::{BenchmarkInstructions, ImplementationFolder, Language, LanguageVersion};
 
-#[derive(Debug)]
-struct Implementation {
-    path: PathBuf,
-    name: String
+
+pub fn read_implementations_folder() -> io::Result<BenchmarkInstructions> {
+    let folder_path = Path::new("implementations");
+    if !folder_path.exists() {
+        return Err(io::Error::new(
+            io::ErrorKind::NotFound,
+            "implementations folder not found",
+        ));
+    }
+    let languages = read_language_folder(folder_path)?;
+    Ok(BenchmarkInstructions { languages })
 }
 
-#[derive(Debug)]
-struct LanguageVersion {
-    version: String,
-    implementations: Vec<Implementation>,
-}
-
-#[derive(Debug)]
-struct Language {
-    name: String,
-    versions: Vec<LanguageVersion>,
-}
-
-fn read_folder_recursive(path: &Path) -> io::Result<Vec<Language>> {
+fn read_language_folder(path: &Path) -> io::Result<Vec<Language>> {
     let mut languages = Vec::new();
 
     for entry in fs::read_dir(path)? {
@@ -28,38 +24,7 @@ fn read_folder_recursive(path: &Path) -> io::Result<Vec<Language>> {
 
         if entry_path.is_dir() {
             let language_name = path_to_folder_name(&entry_path);
-
-            let mut language_versions = Vec::new();
-
-            for version_entry in fs::read_dir(entry_path)? {
-                let version_entry = version_entry?;
-                let version_entry_path = version_entry.path();
-
-                if version_entry_path.is_dir() {
-                    let version_name = path_to_folder_name(&version_entry_path);
-
-                    let mut implementations = Vec::new();
-
-                    for implementation_entry in fs::read_dir(version_entry_path)? {
-                        let implementation_entry = implementation_entry?;
-                        let implementation_entry_path = implementation_entry.path();
-
-                        if implementation_entry.path().is_dir() {
-                            implementations.push(Implementation {
-                                name: path_to_folder_name(&implementation_entry_path),
-                                path: implementation_entry_path
-
-                            });
-                        }
-                    }
-
-                    language_versions.push(LanguageVersion {
-                        version: version_name,
-                        implementations,
-                    });
-                }
-            }
-
+            let language_versions = read_version_folder(&entry_path)?;
             languages.push(Language {
                 name: language_name,
                 versions: language_versions,
@@ -70,29 +35,42 @@ fn read_folder_recursive(path: &Path) -> io::Result<Vec<Language>> {
     Ok(languages)
 }
 
-pub fn read_implementations_folder() -> io::Result<()> {
-    let folder_path = Path::new("implementations");
+fn read_version_folder(path: &Path) -> io::Result<Vec<LanguageVersion>> {
+    let mut language_versions = Vec::new();
 
-    if !folder_path.exists() {
-        return Err(io::Error::new(
-            io::ErrorKind::NotFound,
-            "implementations folder not found",
-        ));
-    }
+    for version_entry in fs::read_dir(path)? {
+        let version_entry = version_entry?;
+        let version_entry_path = version_entry.path();
 
-    let languages = read_folder_recursive(folder_path)?;
-
-    for language in &languages {
-        println!("Found language: {}", language.name);
-        for version in &language.versions {
-            println!("  Found version: {}", version.version);
-            for implementation in &version.implementations {
-                println!("    Found implementation: {}", implementation.name);
-            }
+        if version_entry_path.is_dir() {
+            let version_name = path_to_folder_name(&version_entry_path);
+            let implementations = read_implementation_folder(&version_entry_path)?;
+            language_versions.push(LanguageVersion {
+                version: version_name,
+                implementations,
+            });
         }
     }
 
-    Ok(())
+    Ok(language_versions)
+}
+
+fn read_implementation_folder(path: &Path) -> io::Result<Vec<ImplementationFolder>> {
+    let mut implementations = Vec::new();
+
+    for implementation_entry in fs::read_dir(path)? {
+        let implementation_entry = implementation_entry?;
+        let implementation_entry_path = implementation_entry.path();
+
+        if implementation_entry.path().is_dir() {
+            implementations.push(ImplementationFolder {
+                name: path_to_folder_name(&implementation_entry_path),
+                path: implementation_entry_path
+            });
+        }
+    }
+
+    Ok(implementations)
 }
 
 fn path_to_folder_name(path: &PathBuf) -> String {
