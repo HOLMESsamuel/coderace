@@ -63,10 +63,20 @@ fn read_implementation_folder(path: &Path) -> io::Result<Vec<ImplementationFolde
         let implementation_entry_path = implementation_entry.path();
 
         if implementation_entry.path().is_dir() {
-            implementations.push(ImplementationFolder {
-                name: path_to_folder_name(&implementation_entry_path),
-                path: implementation_entry_path
-            });
+            let entries = match fs::read_dir(&implementation_entry_path) {
+                Ok(entries) => entries,
+                Err(e) => {
+                    eprintln!("Error reading directory {}: {}", implementation_entry_path.display(), e);
+                    continue;
+                }
+            };
+
+            if entries.count() > 0 {
+                implementations.push(ImplementationFolder {
+                    name: path_to_folder_name(&implementation_entry_path),
+                    path: implementation_entry_path,
+                });
+            }
         }
     }
 

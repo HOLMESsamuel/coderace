@@ -27,3 +27,12 @@ pub struct Language {
 pub struct BenchmarkInstructions {
     pub languages: Vec<Language>
 }
+
+#[derive(Debug)]
+pub struct Result {
+    pub language: String,
+    pub version: String,
+    pub execution_time: String,
+    pub memory_usage: String,
+    pub image_size: String
+}

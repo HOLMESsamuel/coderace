@@ -1,10 +1,10 @@
 pub fn write_python_wrapper(implementation_name: &str) -> String {
-    //TODO peut etre utiliser des command line argument pour les arguments des methodes
     let wrapper_code = format!(
-"import time
+        "import time
 import sys
 from memory_profiler import memory_usage
 from {implementation_name} import factorial
+from six import print_
 
 def main():
     input_number = 4
@@ -13,9 +13,9 @@ def main():
     result = factorial(input_number)
     end_time = time.time()
     elapsed_time = end_time - start_time
-    print(f\"Result: {{result}}\")
-    print(f\"Execution time: {{elapsed_time}} seconds\")
-    print(f\"Memory usage: {{mem_usage}} MiB\")
+    print_(result)
+    print_(elapsed_time)
+    print_(mem_usage)
 
 if __name__ == \"__main__\":
     main()

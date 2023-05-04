@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use crate::dockerfile_writer::python_dockerfile_writer;
 use crate::models::{
     ImplementationFolder, Language, LanguageVersion, PythonImplementation,
@@ -51,35 +52,39 @@ fn write_python_wrapper_file(python_implementation: &PythonImplementation) -> st
 //"memory-profiler" dependency is mandatory to run the benchmark it is added whatever the code
 fn write_python_requirement_file(implementation: &ImplementationFolder) -> std::io::Result<()> {
     let requirements_path = implementation.path.join("requirements.txt");
-    let dependency = "memory-profiler";
+    let dependencies = vec!["memory-profiler", "six"];
 
     if !requirements_path.exists() {
         // Create requirements.txt file if it doesn't exist
-        fs::write(&requirements_path, format!("{}\n", dependency))?;
+        let mut file = fs::File::create(&requirements_path)?;
+        for dependency in &dependencies {
+            writeln!(file, "{}", dependency)?;
+        }
     } else {
         // Read the contents of the existing requirements.txt file
         let file = fs::File::open(&requirements_path)?;
         let reader = BufReader::new(file);
 
-        let mut dependency_present = false;
+        let mut existing_dependencies = HashSet::new();
         for line in reader.lines() {
             if let Ok(line) = line {
-                if line.trim() == dependency {
-                    dependency_present = true;
-                    break;
-                }
+                existing_dependencies.insert(line.trim().to_string());
             }
         }
 
-        if !dependency_present {
-            // Append the required dependency to the existing requirements.txt
-            let mut requirements_file = OpenOptions::new()
-                .write(true)
-                .append(true)
-                .open(&requirements_path)?;
-            writeln!(requirements_file, "{}", dependency)?;
+        let mut requirements_file = OpenOptions::new()
+            .write(true)
+            .append(true)
+            .open(&requirements_path)?;
+
+        // Append the required dependencies that are not already in the file
+        for dependency in &dependencies {
+            if !existing_dependencies.contains(*dependency) {
+                writeln!(requirements_file, "{}", dependency)?;
+            }
         }
     }
+
     Ok(())
 }
 
