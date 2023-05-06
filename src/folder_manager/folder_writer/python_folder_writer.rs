@@ -17,7 +17,7 @@ pub(crate) fn write_python_folder(language: &Language) -> std::io::Result<()> {
                 executable_name: "python".to_string(),
             };
             write_python_dockerfile(&python_implementation, &version)?;
-            write_python_wrapper_file(&python_implementation)?;
+            write_python_wrapper_file(implementation)?;
             write_python_requirement_file(implementation)?;
             //TODO : recuperer le nom de la methode
         }
@@ -38,11 +38,11 @@ fn write_python_dockerfile(
     Ok(())
 }
 
-fn write_python_wrapper_file(python_implementation: &PythonImplementation) -> std::io::Result<()> {
+fn write_python_wrapper_file(python_implementation: &ImplementationFolder) -> std::io::Result<()> {
     let wrapper_path = python_implementation.path.join("wrapper.py");
     let mut file = File::create(wrapper_path)?;
 
-    let wrapper_code = python_wrapper_writer::write_python_wrapper("factorial");
+    let wrapper_code = python_wrapper_writer::write_python_wrapper(python_implementation);
 
     file.write_all(wrapper_code.as_bytes())?;
     Ok(())

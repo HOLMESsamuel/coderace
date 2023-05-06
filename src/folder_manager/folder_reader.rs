@@ -1,6 +1,6 @@
 use std::{fs, io};
 use std::path::{Path, PathBuf};
-use crate::models::{BenchmarkInstructions, ImplementationFolder, Language, LanguageVersion};
+use crate::models::{BenchmarkInstructions, Config, ImplementationFolder, Language, LanguageVersion};
 
 
 pub fn read_implementations_folder() -> io::Result<BenchmarkInstructions> {
@@ -72,10 +72,32 @@ fn read_implementation_folder(path: &Path) -> io::Result<Vec<ImplementationFolde
             };
 
             if entries.count() > 0 {
-                implementations.push(ImplementationFolder {
+
+                let config_path = implementation_entry_path.join("config.json");
+                if !config_path.exists() {
+                    eprintln!("config.json not found in folder {}", implementation_entry_path.display());
+                    continue;
+                }
+
+                let config_content = fs::read_to_string(config_path)?;
+                let config: Config = match serde_json::from_str(&config_content) {
+                    Ok(config) => config,
+                    Err(e) => {
+                        eprintln!("Error parsing config.json in folder {}: {}", implementation_entry_path.display(), e);
+                        continue;
+                    }
+                };
+
+                let implementation_folder = ImplementationFolder {
                     name: path_to_folder_name(&implementation_entry_path),
                     path: implementation_entry_path,
-                });
+                    arguments: config.arguments,
+                    method_name: config.method_name,
+                    module_name: config.module_name,
+                };
+
+                implementations.push(implementation_folder);
+
             }
         }
     }

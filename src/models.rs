@@ -1,9 +1,27 @@
 use std::path::PathBuf;
+use serde_derive::Deserialize;
 
 #[derive(Debug)]
 pub struct ImplementationFolder {
     pub path: PathBuf,
-    pub name: String
+    pub name: String,
+    pub arguments: Vec<Argument>,
+    pub method_name: String,
+    pub module_name: String
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Argument {
+    pub name: String,
+    pub value: String,
+    pub argument_type: String
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Config {
+    pub method_name: String,
+    pub module_name: String,
+    pub arguments: Vec<Argument>
 }
 
 pub struct PythonImplementation {

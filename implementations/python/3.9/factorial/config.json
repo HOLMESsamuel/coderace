@@ -1,0 +1,11 @@
+{
+  "method_name": "factorial",
+  "module_name": "factorial",
+  "arguments": [
+    {
+      "name": "n",
+      "value": "4",
+      "argument_type": "int"
+    }
+  ]
+}
