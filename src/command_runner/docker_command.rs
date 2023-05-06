@@ -3,6 +3,15 @@ use std::path::Path;
 use std::io;
 use crate::models::BenchmarkInstructions;
 
+pub fn is_docker_running() -> bool {
+    let output = Command::new("docker")
+        .arg("info")
+        .output()
+        .expect("Failed to execute command");
+
+    output.status.success()
+}
+
 pub fn build_docker_images(benchmark_instructions: &BenchmarkInstructions) -> io::Result<()> {
     for language in &benchmark_instructions.languages {
         for version in &language.versions {
