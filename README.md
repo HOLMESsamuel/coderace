@@ -26,19 +26,35 @@ To get started with CodeRace, follow these steps:
                     /fibonacci
                 /1.68.2
                     /fibonacci
-        
 
-3. Install Rust and Docker on your system if you haven't already.
+3. In each folder you need to place a file containing a method that you want to benchmark, this method will be the entry point. For example here with
+python you will place a fibonacci.py file containing a fibonacci(n) method.
+You also need to add a config.json file containing the name of the file containing the entry point method, the method name and a list of the arguments needed.
+It will look like this : 
 
-4. Run the project:
+       {
+         "method_name": "factorial",
+         "module_name": "factorial",
+         "arguments": [
+           {
+             "name": "n",
+             "value": "4",
+             "argument_type": "int"
+           }
+         ]
+       }
+
+4. Install Rust and Docker on your system if you haven't already.
+
+5. Run the project:
 
     
     cargo run
 
 
-5. CodeRace will build and run Docker containers for each implementation, and then analyze and compare the performance of each implementation.
+6. CodeRace will build and run Docker containers for each implementation, and then analyze and compare the performance of each implementation.
 
-6. After the benchmarking process has finished, CodeRace will output a detailed comparison of the implementations, including metrics such as execution time and memory usage.
+7. After the benchmarking process has finished, CodeRace will output a detailed comparison of the implementations, including metrics such as execution time and memory usage.
 
 ## Contributing
 
@@ -56,3 +72,25 @@ Contributions to CodeRace are welcome! If you would like to contribute, please f
 
 CodeRace is released under the MIT License.
 
+# Documentation
+
+## How does it work ?
+
+In each folder containing some implementation to benchmark a custom wrapper is created, it will call the method to be benchmarked and gather metrics about it.
+A dockerfile is also create to blueprint a container whose role is to run the wrapper file. The results are then gathered and displayed for each implementation to be compared.
+
+The whole process can be decomposed in 4 phases : 
+
+1. The implementation folder is readed to know what language, version and implementation will be used. In this phase the BenchlarkInstruction object is created and will be used in other modules to pass instructions.
+2. Depending on the language different files are written in the implementation folders such as requirements.txt for python. A wrapper and a dockerfile are created in each folder.
+3. One container is created for each dockerfile, then it is runned, during the process the wrapper will call the method that needs to be tested and gather metrics about its execution, then the container is stopped and the image removed so that the starting conditions are the same for each container.
+4. Once all containers have been runned and destroyed the results are displayed.
+## Project structure
+
+Each functionality is separated in its own module : 
+
+* command_runner module contains everything needed to run commands especially docker commands that are used to start the different executions.
+* folder_manager contains folder_writer and folder_reader :
+  * folder_writer : contains everything needed to write files in the folders such as requirements.txt, dockerfiles or wrappers
+  * folder_reader : reads the implementation folder and create the BenchmarkInstruction Struct containing all the information to run the benchmark process.
+* result_writer : this module will use command runner module to start each container and gather the results.
