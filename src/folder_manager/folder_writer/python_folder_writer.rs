@@ -1,9 +1,9 @@
 use std::collections::HashSet;
-use crate::dockerfile_writer::python_dockerfile_writer;
+use crate::folder_manager::folder_writer::dockerfile_writer;
 use crate::models::{
     ImplementationFolder, Language, LanguageVersion, PythonImplementation,
 };
-use crate::wrapper_writer::python_wrapper_writer;
+use crate::folder_manager::folder_writer::wrapper_writer::python_wrapper_writer;
 use std::fs;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
@@ -32,7 +32,7 @@ fn write_python_dockerfile(
     let wrapper_path = python_implementation.path.join("Dockerfile");
     let mut file = File::create(wrapper_path)?;
 
-    let python_dockerfile = python_dockerfile_writer::write_python_dockerfile(&version.version);
+    let python_dockerfile = dockerfile_writer::python_dockerfile_writer::write_python_dockerfile(&version.version);
 
     file.write_all(python_dockerfile.as_bytes())?;
     Ok(())
