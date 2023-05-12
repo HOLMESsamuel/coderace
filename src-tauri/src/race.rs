@@ -1,15 +1,13 @@
-mod folder_manager;
-mod models;
-mod command_runner;
-mod result_writer;
-
 use crate::folder_manager::folder_writer::folder_writer::write_folders;
 use crate::command_runner::docker_command::build_docker_images;
 use crate::command_runner::docker_command::remove_dangling_images;
 use crate::command_runner::docker_command::is_docker_running;
+use crate::folder_manager;
 use crate::result_writer::result_writer::run_docker_images;
 
-fn main() {
+#[tauri::command]
+pub(crate) async fn race() -> Result<String, String>{
+
     match folder_manager::folder_reader::read_implementations_folder() {
         Ok(benchmark_instructions) => {
             match write_folders(&benchmark_instructions) {
@@ -36,11 +34,15 @@ fn main() {
                     Err(e) => eprintln!("Error running docker images: {}", e),
                 }
                 remove_dangling_images();
+                Ok("Race completed!".to_string())
             } else {
                 println!("Docker is not installed or not running");
+                Ok("Docker is not installed or not running".to_string())
             }
 
         }
-        Err(e) => eprintln!("Error reading implementations folder: {}", e),
+
+        Err(e) => {Err("Error reading folders: ".to_string() + &*e.to_string())}
     }
+
 }

@@ -4,7 +4,7 @@ use crate::models::{BenchmarkInstructions, Config, ImplementationFolder, Languag
 
 
 pub fn read_implementations_folder() -> io::Result<BenchmarkInstructions> {
-    let folder_path = Path::new("implementations");
+    let folder_path = Path::new("../src-tauri/implementations");
     if !folder_path.exists() {
         return Err(io::Error::new(
             io::ErrorKind::NotFound,
