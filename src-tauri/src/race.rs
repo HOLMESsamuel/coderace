@@ -4,23 +4,28 @@ use crate::command_runner::docker_command::remove_dangling_images;
 use crate::command_runner::docker_command::is_docker_running;
 use crate::folder_manager;
 use crate::result_writer::result_writer::run_docker_images;
+use tauri::Window;
 
 #[tauri::command]
-pub(crate) async fn race() -> Result<String, String>{
+pub async fn race(window: Window) -> Result<String, String>{
+
+    let log = |message: &str| {
+        window.emit("LOG", message).unwrap();
+    };
 
     match folder_manager::folder_reader::read_implementations_folder() {
         Ok(benchmark_instructions) => {
             match write_folders(&benchmark_instructions) {
-                Ok(()) => println!("wrappers created successfully."),
+                Ok(()) => log("wrappers created successfully"),
                 Err(e) => eprintln!("Error writing folders: {}", e),
             };
             if is_docker_running() {
-                println!("building docker images...");
+                log("building docker images...");
                 match build_docker_images(&benchmark_instructions) {
                     Ok(()) => println!("docker images built"),
                     Err(e) => eprintln!("Error building docker images: {}", e),
                 };
-                println!("running docker images...");
+                log("running docker images...");
                 match run_docker_images(&benchmark_instructions) {
                     Ok(r) => {
                         for result in r {
@@ -36,7 +41,6 @@ pub(crate) async fn race() -> Result<String, String>{
                 remove_dangling_images();
                 Ok("Race completed!".to_string())
             } else {
-                println!("Docker is not installed or not running");
                 Ok("Docker is not installed or not running".to_string())
             }
 
