@@ -13,21 +13,40 @@ function logMessage(message) {
 }
 
 startButton.addEventListener('click', function() {
-    // Hide the start button and show the loader
-    startButton.style.display = 'none';
-    loader.classList.add('show');
 
+    hideStartButton();
     logElement.innerHTML = "";
 
-    // Invoke the race function in Rust
-    invoke('race', {window: appWindow}).then(response => {
-        // Hide the loader, show the result and display the start button again
-        loader.classList.remove('show');
-        startButton.style.display = 'block';
-        resultContainer.innerHTML = response;
-    });
+// Invoke the race function in Rust
+    invoke('race', { window: appWindow })
+        .then(handleRaceResult)
+        .catch(handleRaceError)
+        .finally(endRace);
 });
 
 const listener = await listen('LOG', (event) => {
     logMessage(event.payload);
 })
+
+function hideStartButton() {
+    startButton.style.display = 'none';
+    loader.classList.add('show');
+}
+
+function showStartButton() {
+    loader.classList.remove('show');
+    startButton.style.display = 'block';
+}
+
+function handleRaceResult(response) {
+    resultContainer.innerHTML = response;
+}
+
+function handleRaceError(error) {
+    resultContainer.innerHTML = error;
+}
+
+function endRace() {
+    showStartButton();
+    logElement.innerHTML = "race over";
+}

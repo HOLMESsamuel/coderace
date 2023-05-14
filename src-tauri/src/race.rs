@@ -46,7 +46,9 @@ pub async fn race(window: Window) -> Result<String, String>{
 
         }
 
-        Err(e) => {Err("Error reading folders: ".to_string() + &*e.to_string())}
+        Err(e) => {
+            return Err("Error reading folder: ".to_string() + &*e.to_string());
+        }
     }
 
 }
