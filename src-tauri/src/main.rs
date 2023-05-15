@@ -27,14 +27,11 @@ fn main() {
       .invoke_handler(tauri::generate_handler![race])
       .on_menu_event(|event| {
         match event.menu_item_id() {
-          "quit" => {
-            std::process::exit(0);
-          }
-          "close" => {
+          "exit" => {
             event.window().close().unwrap();
           }
-          "export" => {
-            export()
+          "save" => {
+            save()
           }
           _ => {}
         }
@@ -44,13 +41,11 @@ fn main() {
 }
 
 fn setup_menu() -> Menu {
-  let quit = CustomMenuItem::new("quit".to_string(), "Quit");
-  let close = CustomMenuItem::new("close".to_string(), "Close");
-  let export = CustomMenuItem::new("export".to_string(), "Export");
+  let exit = CustomMenuItem::new("exit".to_string(), "Exit");
+  let save = CustomMenuItem::new("save".to_string(), "Save");
   let file_submenu = Submenu::new("File", Menu::new()
-      .add_item(export)
-      .add_item(quit)
-      .add_item(close));
+      .add_item(save)
+      .add_item(exit));
 
   let how_does_it_works = CustomMenuItem::new("how does it work ?".to_string(), "How does it work ?");
   let help_submenu = Submenu::new("Help", Menu::new().add_item(how_does_it_works));
@@ -62,13 +57,15 @@ fn setup_menu() -> Menu {
   return menu;
 }
 
-fn export() {
-  // Choose the directory where the zip file will be saved
-  dialog::FileDialogBuilder::new().pick_folder(|option|{
+fn save() {
+  // Open a file save dialog
+  dialog::FileDialogBuilder::new().save_file(|option| {
     match option {
-      Some(dir_path) => {
-        // Create the path for the zip file
-        let zip_path = dir_path.join("implementations.zip");
+      Some(mut zip_path) => {
+        // Check if the file has a .zip extension, and add it if not
+        if zip_path.extension().unwrap_or_default() != "zip" {
+          zip_path.set_extension("zip");
+        }
 
         // Open the zip file in write mode
         let file = File::create(&zip_path).expect("Failed to create zip file");
@@ -76,7 +73,7 @@ fn export() {
 
         let folder_path = Path::new("./implementations");
 
-        // Call your function to zip the "implementations" directory
+        // zip the "implementations" directory
         folder_archiver::zip_dir(folder_path, &mut zip_writer).expect("Failed to zip directory");
       },
       None => {
@@ -85,5 +82,7 @@ fn export() {
     }
   });
 }
+
+
 
 
