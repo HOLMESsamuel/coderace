@@ -33,6 +33,9 @@ fn main() {
           "save" => {
             save()
           }
+          "open" => {
+            open()
+          }
           _ => {}
         }
       })
@@ -43,8 +46,10 @@ fn main() {
 fn setup_menu() -> Menu {
   let exit = CustomMenuItem::new("exit".to_string(), "Exit");
   let save = CustomMenuItem::new("save".to_string(), "Save");
+  let open = CustomMenuItem::new("open".to_string(), "Open");
   let file_submenu = Submenu::new("File", Menu::new()
       .add_item(save)
+      .add_item(open)
       .add_item(exit));
 
   let how_does_it_works = CustomMenuItem::new("how does it work ?".to_string(), "How does it work ?");
@@ -75,6 +80,20 @@ fn save() {
 
         // zip the "implementations" directory
         folder_archiver::zip_dir(folder_path, &mut zip_writer).expect("Failed to zip directory");
+      },
+      None => {
+        // The user cancelled the dialog
+      },
+    }
+  });
+}
+
+fn open() {
+  // Open a file save dialog
+  dialog::FileDialogBuilder::new().pick_file(|option| {
+    match option {
+      Some(zip_path) => {
+        folder_archiver::unzip_archive(zip_path).expect("Failed to unzip directory");
       },
       None => {
         // The user cancelled the dialog
