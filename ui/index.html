@@ -5,28 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeRace</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home-style.css">
 </head>
 
 <body>
-<header>
-    <h1>CodeRace</h1>
-    <h2>Welcome to the race! Ready, set, code!</h2>
-</header>
 <main>
-    <div class="content">
-        <p>Let's see which code is the fastest !</p>
-        <button id="start-button">Start Race</button>
-        <div id="loader"></div>
-        <div id="log"></div>
+    <div id="left-column">
+        <div id="start-button-container">
+            <button id="start-button">Start Race</button>
+            <div id="loader"></div>
+        </div>
+        <div id="new-implementation-form">
+            <div id="implementation-form">
+                <h2>Add an implementation</h2>
+                <form id="impl-form">
+                    <label for="impl-lang">Language:</label>
+                    <select id="impl-lang" name="impl-lang">
+                        <option value="java">Java</option>
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <!-- Add more languages as needed -->
+                    </select>
+                    <br>
+                    <label for="impl-version">Version:</label>
+                    <input type="text" id="impl-version" name="impl-version">
+                    <br>
+                    <label for="impl-name">Name:</label>
+                    <input type="text" id="impl-name" name="impl-name">
+                    <br>
+                    <button type="submit">Add implementation</button>
+                </form>
+            </div>
+        </div>
     </div>
-    <div id="result"></div>
+
+    <div id="right-column">
+        <div id="log"></div>
+        <div id="result"></div>
+    </div>
 </main>
-<footer>
-    <p>© 2023 CodeRace. All rights reserved.</p>
-</footer>
 </body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <script type="module" src="script.js"></script>
 </html>
+

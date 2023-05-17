@@ -1,0 +1,50 @@
+main {
+    display: flex;
+    width: 90%;
+    height: 90%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+#left-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    max-width: 33%;
+    margin: 10px;
+    padding: 20px;
+    background: #fff;
+    color: #3498db;
+    border-radius: 5px;
+}
+
+#start-button-container {
+    flex: 0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px; /* Add separation here */
+    background: rgba(52, 152, 219, 0.1); /* Differentiate sections */
+    border-radius: 5px;
+}
+
+#new-implementation-form {
+    flex: 1.5;
+    display: flex;
+    justify-content: center;
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 5px;
+}
+
+#right-column {
+    flex: 2;
+    margin: 10px;
+    padding: 20px;
+    background: #fff;
+    color: #3498db;
+    border-radius: 5px;
+    overflow-y: auto;
+}
+
