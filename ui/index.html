@@ -17,13 +17,13 @@
         </div>
         <div id="new-implementation-form">
             <div id="implementation-form">
-                <h2>Add an implementation</h2>
+                <h2>New implementation</h2>
                 <form id="impl-form">
                     <label for="impl-lang">Language:</label>
                     <select id="impl-lang" name="impl-lang">
                         <option value="java">Java</option>
                         <option value="python">Python</option>
-                        <option value="javascript">JavaScript</option>
+                        <option value="javascript">Rust</option>
                         <!-- Add more languages as needed -->
                     </select>
                     <br>
@@ -33,15 +33,19 @@
                     <label for="impl-name">Name:</label>
                     <input type="text" id="impl-name" name="impl-name">
                     <br>
-                    <button type="submit">Add implementation</button>
+                    <button id="add-implementation">Add implementation</button>
                 </form>
             </div>
         </div>
     </div>
 
     <div id="right-column">
+        <div id="implementations">
+            <!-- Implementations will be dynamically inserted here -->
+        </div>
         <div id="log"></div>
         <div id="result"></div>
+        <button id="show-impl">Show implementations</button>
     </div>
 </main>
 </body>

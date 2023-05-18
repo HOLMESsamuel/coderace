@@ -2,7 +2,7 @@ main {
     display: flex;
     width: 90%;
     height: 90%;
-    padding: 20px;
+    padding: 10px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
 }
@@ -14,7 +14,7 @@ main {
     flex: 1;
     max-width: 33%;
     margin: 10px;
-    padding: 20px;
+    padding: 10px;
     background: #fff;
     color: #3498db;
     border-radius: 5px;
@@ -41,10 +41,104 @@ main {
 #right-column {
     flex: 2;
     margin: 10px;
-    padding: 20px;
+    padding: 10px;
     background: #fff;
     color: #3498db;
     border-radius: 5px;
     overflow-y: auto;
+}
+
+#implementation-form {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+#implementation-form input,
+#implementation-form select {
+    width: 100%;
+    padding: 10px;
+    border: solid #3498db 1px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #3498db;
+}
+
+#implementation-form input:focus,
+#implementation-form select:focus {
+    border: solid #3498db 1px;
+}
+
+#implementation-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#implementation-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#implementation-form button:hover {
+    background: #2980b9;
+}
+
+#implementations {
+    margin-top: 20px;
+}
+
+.language {
+    margin-bottom: 10px;
+    padding: 5px;
+    border-radius: 3px;
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    font-size: 0.8em;
+}
+
+.version {
+    margin: 5px 0;
+    padding: 5px;
+    border-left: 2px solid #fff;
+    font-size: 1em;
+    color: #3498db;
+}
+
+.implementation {
+    margin-left: 10px;
+    margin-bottom: 5px;
+    padding: 3px;
+    color: #fff;
+    background-color: #3498db;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+
+
+/* This applies to all scrollbars on the page */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* This is the scrollbar track (the space where the scrollbar travels) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* This is the scrollbar handle itself */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* This changes the color of the scrollbar handle when you hover over it */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 

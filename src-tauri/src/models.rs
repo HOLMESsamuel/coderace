@@ -1,7 +1,7 @@
 use std::path::PathBuf;
-use serde_derive::Deserialize;
+use serde_derive::{Deserialize, Serialize};
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ImplementationFolder {
     pub path: PathBuf,
     pub name: String,
@@ -10,7 +10,7 @@ pub struct ImplementationFolder {
     pub module_name: String
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Argument {
     pub name: String,
     pub value: String,
@@ -29,19 +29,19 @@ pub struct PythonImplementation {
     pub executable_name: String
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct LanguageVersion {
     pub version: String,
     pub implementations: Vec<ImplementationFolder>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Language {
     pub name: String,
     pub versions: Vec<LanguageVersion>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BenchmarkInstructions {
     pub languages: Vec<Language>
 }

@@ -11,6 +11,7 @@ mod race;
 use std::fs::File;
 use std::path::Path;
 use crate::race::race;
+use crate::folder_manager::folder_reader::read_implementations_folder_for_front;
 use tauri::{CustomMenuItem, Menu, Submenu, Manager};
 use folder_manager::folder_writer::folder_creator::folder_creator;
 use folder_manager::folder_archiver::folder_archiver;
@@ -24,7 +25,7 @@ fn main() {
 
   tauri::Builder::default()
       .menu(menu)
-      .invoke_handler(tauri::generate_handler![race])
+      .invoke_handler(tauri::generate_handler![race, read_implementations_folder_for_front])
       .on_menu_event(|event| {
         match event.menu_item_id() {
           "exit" => {

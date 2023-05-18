@@ -2,7 +2,6 @@ use std::{fs, io};
 use std::path::{Path, PathBuf};
 use crate::models::{BenchmarkInstructions, Config, ImplementationFolder, Language, LanguageVersion};
 
-
 pub fn read_implementations_folder() -> io::Result<BenchmarkInstructions> {
     let folder_path = Path::new("implementations");
     if !folder_path.exists() {
@@ -14,6 +13,35 @@ pub fn read_implementations_folder() -> io::Result<BenchmarkInstructions> {
     let languages = read_language_folder(folder_path)?;
     Ok(BenchmarkInstructions { languages })
 }
+
+use std::collections::HashMap;
+
+#[tauri::command]
+pub fn read_implementations_folder_for_front() -> Result<String, String> {
+    let instructions = match read_implementations_folder() {
+        Ok(data) => data,
+        Err(e) => return Err(e.to_string()),
+    };
+
+    let mut implementations = HashMap::new();
+
+    for language in instructions.languages {
+        let mut versions = HashMap::new();
+        for version in language.versions {
+            let implementation_names = version.implementations.into_iter().map(|imp| imp.name).collect::<Vec<_>>();
+            versions.insert(version.version, implementation_names);
+        }
+        implementations.insert(language.name, versions);
+    }
+
+    // Serialize the instructions to a JSON string
+    match serde_json::to_string(&implementations) {
+        Ok(json) => Ok(json),
+        Err(e) => Err(e.to_string()),
+    }
+}
+
+
 
 fn read_language_folder(path: &Path) -> io::Result<Vec<Language>> {
     let mut languages = Vec::new();
