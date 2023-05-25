@@ -1,0 +1,58 @@
+.implementation-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #404040;
+}
+
+.implementation-form input[type=text],
+.implementation-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.implementation-form button {
+    background-color: #0099ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.implementation-form button:hover {
+    background-color: #007acc;
+}
+
+.implementation-form input[type=file] {
+    margin-bottom: 20px;
+}
+
+.implementation-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #F8F9FA;
+}
+
+.column-left, .column-right {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+}
+
+.column-left .button, .column-right .button {
+    margin-top: 20px;
+}
+
+.input-small, .textarea-large {
+    margin-bottom: 20px;
+}

@@ -25,7 +25,7 @@ fn main() {
 
   tauri::Builder::default()
       .menu(menu)
-      .invoke_handler(tauri::generate_handler![race, read_implementations_folder_for_front])
+      .invoke_handler(tauri::generate_handler![race, read_implementations_folder_for_front, open_implementation_form_window])
       .on_menu_event(|event| {
         match event.menu_item_id() {
           "exit" => {
@@ -45,12 +45,7 @@ fn main() {
         let main_window = app.get_window("main").unwrap();
         // we perform the initialization code on a new task so the app doesn't freeze
         tauri::async_runtime::spawn(async move {
-          // initialize your app here instead of sleeping :)
-          println!("Initializing...");
           std::thread::sleep(std::time::Duration::from_secs(2));
-          println!("Done initializing.");
-
-          // After it's done, close the splashscreen and display the main window
           splashscreen_window.close().unwrap();
           main_window.show().unwrap();
         });
@@ -117,6 +112,18 @@ fn open() {
       },
     }
   });
+}
+
+#[tauri::command]
+async fn open_implementation_form_window(app_handle: tauri::AppHandle) {
+  let _new_window = tauri::WindowBuilder::new(
+    &app_handle,
+    "implementation-form",
+    tauri::WindowUrl::App("implementation-form.html".into())
+  )
+      .title("Write implementation")
+      .build()
+      .expect("failed to build window");
 }
 
 

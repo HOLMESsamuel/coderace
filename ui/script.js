@@ -10,6 +10,7 @@ let logElement = document.getElementById('log');
 let implementationsDiv = document.getElementById("implementations");
 let showImplButton = document.getElementById('show-impl');
 let addImplementationButton = document.getElementById('add-implementation')
+let errorDiv = document.getElementById("form-error");
 
 let implementations = {}
 
@@ -23,14 +24,16 @@ addImplementationButton.addEventListener('click', () => {
     // Select all the required input fields
     let languageInput = document.getElementById('impl-lang');
     let versionInput = document.getElementById('impl-version');
-    let implementationInput = document.getElementById('impl-name');n
+    let implementationInput = document.getElementById('impl-name');
 
     // Check if any of the input fields are empty
     if (!languageInput.value || !versionInput.value || !implementationInput.value) {
         // Display an error message
-        console.log('Please fill out all fields before adding the implementation.');
+        errorDiv.textContent = 'Please fill out all fields before adding the implementation.';
     } else {
         // The input fields are not empty, continue with adding the implementation
+        errorDiv.textContent = '';
+        invoke('open_implementation_form_window');
     }
 });
 
