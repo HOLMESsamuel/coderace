@@ -1,6 +1,4 @@
 
-k
-;src-tauri/src/folder_manager/folder_writer/folder_writer.rs,0\f\0fcadb986b065fe6f3059a2411e74dd92ccc08ff
 S
 #src-tauri/src/folder_manager/mod.rs,8\6\862f779b1b204410571c68ad9905632c443ae6e3
 c

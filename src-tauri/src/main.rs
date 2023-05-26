@@ -5,13 +5,17 @@ mod folder_manager;
 mod models;
 mod command_runner;
 mod result_writer;
+mod window_manager;
 #[macro_use]
 mod race;
 
 use std::fs::File;
 use std::path::Path;
 use crate::race::race;
+use crate::window_manager::implementation_form_window_manager::open_implementation_form_window;
+use crate::window_manager::implementation_form_window_manager::submit_implementation_form;
 use crate::folder_manager::folder_reader::read_implementations_folder_for_front;
+use crate::folder_manager::folder_writer::folder_writer::create_implementation_folder;
 use tauri::{CustomMenuItem, Menu, Submenu, Manager};
 use folder_manager::folder_writer::folder_creator::folder_creator;
 use folder_manager::folder_archiver::folder_archiver;
@@ -25,7 +29,7 @@ fn main() {
 
   tauri::Builder::default()
       .menu(menu)
-      .invoke_handler(tauri::generate_handler![race, read_implementations_folder_for_front, open_implementation_form_window])
+      .invoke_handler(tauri::generate_handler![race, read_implementations_folder_for_front, create_implementation_folder, open_implementation_form_window, submit_implementation_form])
       .on_menu_event(|event| {
         match event.menu_item_id() {
           "exit" => {
@@ -112,18 +116,6 @@ fn open() {
       },
     }
   });
-}
-
-#[tauri::command]
-async fn open_implementation_form_window(app_handle: tauri::AppHandle) {
-  let _new_window = tauri::WindowBuilder::new(
-    &app_handle,
-    "implementation-form",
-    tauri::WindowUrl::App("implementation-form.html".into())
-  )
-      .title("Write implementation")
-      .build()
-      .expect("failed to build window");
 }
 
 
