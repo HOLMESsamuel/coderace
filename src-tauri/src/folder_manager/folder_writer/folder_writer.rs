@@ -1,6 +1,5 @@
 use std::fs;
 use std::path::Path;
-use tauri::Error;
 use crate::folder_manager::folder_writer::python_folder_writer::write_python_folder;
 use crate::models::BenchmarkInstructions;
 

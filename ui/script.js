@@ -35,7 +35,7 @@ addImplementationButton.addEventListener('click', () => {
         errorDiv.textContent = '';
         invoke('create_implementation_folder', {languageName: languageInput.value, versionName: versionInput.value, implementationName: implementationInput.value});
         invoke('open_implementation_form_window');
-        showImplementations();
+        loadFilesystem();
     }
 });
 
@@ -61,6 +61,7 @@ function loadFilesystem() {
 
 function handleFilesystem(response) {
     implementations = JSON.parse(response);
+    showImplementations();
 }
 
 function handleFilesystemError(error) {
@@ -68,7 +69,7 @@ function handleFilesystemError(error) {
 }
 
 showImplButton.addEventListener('click', function () {
-    showImplementations();
+    loadFilesystem();
 })
 
 const listener = await listen('LOG', (event) => {
@@ -107,19 +108,43 @@ function showImplementations() {
     logElement.innerHTML = "";
     resultContainer.innerHTML = "";
 
-    loadFilesystem();
-
     // Iterate over each language in the implementations object
+    let languageCount = 0;
     for (let language in implementations) {
         let languageDiv = document.createElement("div");
         languageDiv.className = 'language';
-        languageDiv.innerHTML = `<h3>${language}</h3>`;
+        languageDiv.id = `language-${languageCount}`;
+        let languageTitle = document.createElement("div");
+        languageTitle.className = "language-title";
+        languageTitle.innerHTML = `<span class="triangle"></span><h3>${language}</h3>`; // Add a span for the triangle
+        languageDiv.appendChild(languageTitle);
+
+        // Add event listener to languageDiv
+        languageTitle.addEventListener("click", function(e) {
+            // Toggle the 'hidden' class on the child .version divs
+            Array.from(this.parentElement.getElementsByClassName('version')).forEach(versionDiv => {
+                if (versionDiv.classList.contains('hidden')) {
+                    versionDiv.classList.remove('hidden');
+                    this.getElementsByClassName("triangle")[0].style.transform = "rotate(90deg)"; // Rotate the triangle
+                } else {
+                    versionDiv.classList.add('hidden');
+                    this.getElementsByClassName("triangle")[0].style.transform = "rotate(0deg)"; // Rotate the triangle
+                }
+            });
+        });
 
         // Iterate over each version in this language
+        let versionCount = 0;
         for (let version in implementations[language]) {
             let versionDiv = document.createElement("div");
             versionDiv.className = 'version';
+            versionDiv.id = `language-${languageCount}-version-${versionCount}`;  // Add this line
             versionDiv.innerHTML = `<h4>${version}</h4>`;
+
+            // Add event listener to versionDiv to stop event bubbling
+            versionDiv.addEventListener("click", function(e) {
+                e.stopPropagation();
+            });
 
             // Iterate over each implementation in this version
             implementations[language][version].forEach(implementation => {
@@ -127,15 +152,23 @@ function showImplementations() {
                 implementationDiv.className = 'implementation';
                 implementationDiv.innerHTML = `<p>${implementation}</p>`;
 
+                // Add event listener to implementationDiv to stop event bubbling
+                implementationDiv.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                });
+
                 versionDiv.appendChild(implementationDiv);
             });
 
             languageDiv.appendChild(versionDiv);
+            versionCount++;
         }
 
         implementationsDiv.appendChild(languageDiv);
+        languageCount++;
     }
 }
 
 // Call the function to initially update the implementations view
-showImplementations();
+loadFilesystem();
+

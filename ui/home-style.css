@@ -133,6 +133,26 @@ main {
     overflow-wrap: break-word;
 }
 
+.hidden {
+    display: none;
+}
+
+.language-title {
+    display: flex;
+    align-items: center;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #3498db;
+    transform: rotate(90deg);
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+
 
 
 /* This applies to all scrollbars on the page */
