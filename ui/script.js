@@ -33,9 +33,7 @@ addImplementationButton.addEventListener('click', () => {
     } else {
         // The input fields are not empty, continue with adding the implementation
         errorDiv.textContent = '';
-        invoke('create_implementation_folder', {languageName: languageInput.value, versionName: versionInput.value, implementationName: implementationInput.value});
-        invoke('open_implementation_form_window');
-        loadFilesystem();
+        invoke('open_implementation_form_window', {languageName: languageInput.value, versionName: versionInput.value, implementationName: implementationInput.value});
     }
 });
 

@@ -77,3 +77,24 @@ footer {
     background: rgba(255, 255, 255, 0.1);
 }
 
+
+/* This applies to all scrollbars on the page */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* This is the scrollbar track (the space where the scrollbar travels) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* This is the scrollbar handle itself */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* This changes the color of the scrollbar handle when you hover over it */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+

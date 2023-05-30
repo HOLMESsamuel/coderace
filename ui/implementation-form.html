@@ -10,21 +10,29 @@
 
 <body>
 <main class="implementation-form">
-    <div class="column-left">
-        <label for="method-name">Method Name</label>
-        <input type="text" id="method-name" class="input-small">
-
-        <button id="add-file-button" class="button">Add File</button>
+    <div id="implementation-title-container">
+        <h2 id="implementation-title"></h2>
     </div>
-    <div class="column-right">
-        <label for="file-name">File Name</label>
-        <input type="text" id="file-name" class="input-small">
+    <div class="columns-container">
+        <div class="column-left">
+            <label for="method-name">Method Name</label>
+            <input type="text" id="method-name" class="input-small">
+            <button id="load-file-button" class="button">Load File from Computer</button>
+        </div>
+        <div class="column-right">
+            <label for="file-name">File Name</label>
+            <input type="text" id="file-name" class="input-small">
 
-        <label for="file-content">File Content</label>
-        <textarea id="file-content" class="textarea-large"></textarea>
+            <label for="file-content">File Content</label>
+            <textarea id="file-content" class="textarea-large"></textarea>
 
-        <button id="load-file-button" class="button">Load File from Computer</button>
+            <button id="add-file-button" class="button">Add File</button>
+        </div>
+    </div>
+    <div id="form-error"></div>
+    <div id="submit-button-container">
         <button id="submit-button" class="button">Submit</button>
+        <button id="cancel-button" class="button">Cancel</button>
     </div>
 </main>
 </body>
@@ -33,4 +41,3 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <script src="form-script.js"></script>
 </html>
-

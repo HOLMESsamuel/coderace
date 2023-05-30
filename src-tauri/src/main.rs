@@ -14,6 +14,7 @@ use std::path::Path;
 use crate::race::race;
 use crate::window_manager::implementation_form_window_manager::open_implementation_form_window;
 use crate::window_manager::implementation_form_window_manager::submit_implementation_form;
+use crate::window_manager::implementation_form_window_manager::close_implementation_form_window;
 use crate::folder_manager::folder_reader::read_implementations_folder_for_front;
 use crate::folder_manager::folder_writer::folder_writer::create_implementation_folder;
 use tauri::{CustomMenuItem, Menu, Submenu, Manager};
@@ -29,7 +30,12 @@ fn main() {
 
   tauri::Builder::default()
       .menu(menu)
-      .invoke_handler(tauri::generate_handler![race, read_implementations_folder_for_front, create_implementation_folder, open_implementation_form_window, submit_implementation_form])
+      .invoke_handler(tauri::generate_handler![race,
+        read_implementations_folder_for_front,
+        create_implementation_folder,
+        open_implementation_form_window,
+        close_implementation_form_window,
+        submit_implementation_form])
       .on_menu_event(|event| {
         match event.menu_item_id() {
           "exit" => {
