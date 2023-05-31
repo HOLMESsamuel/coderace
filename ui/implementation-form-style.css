@@ -1,62 +1,79 @@
-.implementation-form label {
-    display: block;
-    margin-bottom: 5px;
-    color: #404040;
-}
-
-.implementation-form input[type=text],
-.implementation-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-.implementation-form button {
-    background-color: #0099ff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
-
-.implementation-form button:hover {
-    background-color: #007acc;
-}
-
-.implementation-form input[type=file] {
-    margin-bottom: 20px;
-}
-
 .implementation-form {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
-    background-color: #F8F9FA;
+    width: 95%;
+    height: 95%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    color: #3498db;
 }
 
-.column-left, .column-right {
+.column-left,
+.column-right {
     display: flex;
     flex-direction: column;
-    width: 45%;
+    justify-content: space-between;
+    flex: 1;
+    margin: 10px;
+    padding: 20px;
+    background: #fff;
+    color: #3498db;
+    border-radius: 5px;
 }
 
-.column-left .button, .column-right .button {
-    margin-top: 20px;
+.column-left {
+    max-width: 33%;
 }
 
-.input-small, .textarea-large {
-    margin-bottom: 20px;
+.implementation-form input[type=text],
+.implementation-form textarea,
+.implementation-form select {
+    width: 95%;
+    padding: 10px;
+    border: solid #3498db 1px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #3498db;
+}
+
+.implementation-form input[type=text]:focus,
+.implementation-form textarea:focus,
+.implementation-form select:focus {
+    border: solid #3498db 1px;
+}
+
+.implementation-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.implementation-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+    max-width: 250px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.implementation-form button:hover {
+    background: #2980b9;
+}
+
+.hidden {
+    display: none;
 }
 
 #implementation-title-container {
     text-align: center;
-    color: #3498db;
+    color: #ffffff;
 }
 
 .columns-container {
