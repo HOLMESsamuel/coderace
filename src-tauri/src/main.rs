@@ -17,7 +17,7 @@ use crate::window_manager::implementation_form_window_manager::submit_implementa
 use crate::window_manager::implementation_form_window_manager::close_implementation_form_window;
 use crate::folder_manager::folder_reader::read_implementations_folder_for_front;
 use crate::folder_manager::folder_writer::folder_writer::create_implementation_folder;
-use tauri::{CustomMenuItem, Menu, Submenu, Manager};
+use tauri::{CustomMenuItem, Menu, Submenu, Manager, Window};
 use folder_manager::folder_writer::folder_creator::folder_creator;
 use folder_manager::folder_archiver::folder_archiver;
 use tauri::api::dialog;
@@ -30,12 +30,14 @@ fn main() {
 
   tauri::Builder::default()
       .menu(menu)
-      .invoke_handler(tauri::generate_handler![race,
+      .invoke_handler(tauri::generate_handler![
+        race,
         read_implementations_folder_for_front,
         create_implementation_folder,
         open_implementation_form_window,
         close_implementation_form_window,
-        submit_implementation_form])
+        submit_implementation_form,
+        open_file_dialog])
       .on_menu_event(|event| {
         match event.menu_item_id() {
           "exit" => {
@@ -120,6 +122,24 @@ fn open() {
       None => {
         // The user cancelled the dialog
       },
+    }
+  });
+}
+
+#[tauri::command]
+fn open_file_dialog(window: Window) {
+  dialog::FileDialogBuilder::new().pick_file(move |option| {
+    match option {
+      Some(file_path) => {
+        // Store the file path
+        let path_string = file_path.to_str().unwrap().to_string();
+
+        // Emit a custom event to the frontend with the file path
+        window.emit("file-selected", Some(path_string)).unwrap();
+      },
+      None => {
+        // The user cancelled the dialog, you might want to handle this case
+      }
     }
   });
 }

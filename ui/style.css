@@ -86,11 +86,13 @@ footer {
 /* This is the scrollbar track (the space where the scrollbar travels) */
 ::-webkit-scrollbar-track {
     background: #f1f1f1;
+    border-radius: 5px;
 }
 
 /* This is the scrollbar handle itself */
 ::-webkit-scrollbar-thumb {
     background: #888;
+    border-radius: 5px;
 }
 
 /* This changes the color of the scrollbar handle when you hover over it */
