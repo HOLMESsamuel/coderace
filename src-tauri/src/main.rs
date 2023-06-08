@@ -55,12 +55,14 @@ fn main() {
       .setup(|app| {
         let splashscreen_window = app.get_window("splashscreen").unwrap();
         let main_window = app.get_window("main").unwrap();
-        // we perform the initialization code on a new task so the app doesn't freeze
-        tauri::async_runtime::spawn(async move {
-          std::thread::sleep(std::time::Duration::from_secs(2));
-          splashscreen_window.close().unwrap();
-          main_window.show().unwrap();
+        let _listener = app.listen_global("reload_implementations", move |_event| {
+          main_window.emit("reload_implementations", "reload".to_string()).unwrap();
         });
+        // we perform the initialization code on a new task so the app doesn't freeze
+        //   std::thread::sleep(std::time::Duration::from_secs(2));
+        //   splashscreen_window.close().unwrap();
+        //   main_window.show().unwrap();
+        // });
         Ok(())
       })
     .run(tauri::generate_context!())

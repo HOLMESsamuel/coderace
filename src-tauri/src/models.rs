@@ -12,7 +12,6 @@ pub struct ImplementationFolder {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Argument {
-    pub name: String,
     pub value: String,
     pub argument_type: String
 }

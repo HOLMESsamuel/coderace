@@ -34,6 +34,8 @@ addImplementationButton.addEventListener('click', () => {
         // The input fields are not empty, continue with adding the implementation
         errorDiv.textContent = '';
         invoke('open_implementation_form_window', {languageName: languageInput.value, versionName: versionInput.value, implementationName: implementationInput.value});
+        versionInput.innerHTML = "";
+        implementationInput.innerHTML = "";
     }
 });
 
@@ -70,8 +72,12 @@ showImplButton.addEventListener('click', function () {
     loadFilesystem();
 })
 
-const listener = await listen('LOG', (event) => {
+const listenerLog = await listen('LOG', (event) => {
     logMessage(event.payload);
+})
+
+const listenerReload = await listen('reload_implementations', () => {
+    loadFilesystem();
 })
 
 function hideStartButtonShowLoader() {
@@ -148,7 +154,7 @@ function showImplementations() {
             implementations[language][version].forEach(implementation => {
                 let implementationDiv = document.createElement("div");
                 implementationDiv.className = 'implementation';
-                implementationDiv.innerHTML = `<p>${implementation}</p>`;
+                implementationDiv.innerHTML = `<button>${implementation}</button>`;
 
                 // Add event listener to implementationDiv to stop event bubbling
                 implementationDiv.addEventListener("click", function(e) {

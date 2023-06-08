@@ -1,5 +1,5 @@
 const { invoke } = window.__TAURI__.tauri;
-const { listen } = window.__TAURI__.event;
+const { emit, listen } = window.__TAURI__.event;
 
 //recover data from url
 let params = new URLSearchParams(window.location.search);
@@ -41,6 +41,7 @@ submitButton.addEventListener("click", () => {
                     writtenFileNames: writtenFileNames,
                     writtenFileContents: writtenFileContents
                 });
+                emit("reload_implementations", {"message": "reload"});
                 invoke("close_implementation_form_window");
             } else {
                 errorDiv.innerHTML = "Please fill out all argument fields before submitting.";

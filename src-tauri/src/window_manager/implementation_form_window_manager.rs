@@ -1,4 +1,5 @@
 use tauri::Manager;
+use crate::folder_manager::folder_writer::folder_creator::folder_creator;
 
 #[tauri::command]
 pub async fn open_implementation_form_window(app_handle: tauri::AppHandle, language_name: String, version_name: String, implementation_name: String) {
@@ -26,10 +27,7 @@ pub fn submit_implementation_form(language_name: String,
                                   imported_file_paths: Vec<String>,
                                   written_file_names: Vec<String>,
                                   written_file_contents: Vec<String>) {
-    println!("{}", written_file_names[0]);
-    println!("{}", written_file_names[1]);
-    println!("{}", written_file_contents[0]);
-    println!("{}", written_file_contents[1]);
+    folder_creator::fill_implementation_folder(language_name, version_name, implementation_name, imported_file_names, imported_file_paths, written_file_names, written_file_contents);
 }
 
 #[tauri::command]

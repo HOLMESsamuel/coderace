@@ -67,13 +67,14 @@
         "resizable": true,
         "title": "coderace",
         "width": 1080,
-        "visible": false,
+        "visible": true,
         "label": "main"
       },
       {
         "width": 800,
         "height": 600,
         "decorations": false,
+        "visible": false,
         "url": "splashscreen.html",
         "label": "splashscreen"
       }
