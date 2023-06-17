@@ -45,10 +45,11 @@ pub struct BenchmarkInstructions {
     pub languages: Vec<Language>
 }
 
-#[derive(Debug)]
-pub struct Result {
+#[derive(Debug, Serialize, Deserialize)]
+pub struct BenchmarkResult {
     pub language: String,
     pub version: String,
+    pub name: String,
     pub execution_time: String,
     pub memory_usage: String,
     pub image_size: String

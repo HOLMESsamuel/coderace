@@ -11,11 +11,23 @@ let implementationsDiv = document.getElementById("implementations");
 let showImplButton = document.getElementById('show-impl');
 let addImplementationButton = document.getElementById('add-implementation')
 let errorDiv = document.getElementById("form-error");
+let resultActions = document.getElementById("result-actions");
 
 let implementations = {}
 
 function logMessage(message) {
     logElement.innerHTML += '<p>' + message + '</p>';
+}
+
+class Result {
+    constructor(language, version, name, execution_time, memory_usage, image_size) {
+        this.language = language;
+        this.version = version;
+        this.name = name;
+        this.execution_time = execution_time;
+        this.memory_usage = memory_usage;
+        this.image_size = image_size;
+    }
 }
 
 // Add a click event listener
@@ -91,13 +103,55 @@ function showStartButton() {
 }
 
 function handleRaceResult(response) {
-    resultContainer.innerHTML = response;
-    showImplButton.style.display = "block"
+    resultContainer.style.display = "block";
+    resultActions.style.display = "block"
+    fillResultTab(response);
+}
+
+function fillResultTab(response) {
+    let results = JSON.parse(response).map(result => new Result(result.language, result.version, result.name, result.execution_time, result.memory_usage, result.image_size));
+    let tableBody = document.querySelector('#results-table tbody');
+
+    tableBody.innerHTML = '';
+
+    results.forEach(result => {
+        // Create a new table row
+        let row = document.createElement('tr');
+
+        // Create and populate cells for each property of the result
+        let languageCell = document.createElement('td');
+        languageCell.textContent = result.language;
+        row.appendChild(languageCell);
+
+        let versionCell = document.createElement('td');
+        versionCell.textContent = result.version;
+        row.appendChild(versionCell);
+
+        let nameCell = document.createElement('td');
+        nameCell.textContent = result.name;
+        row.appendChild(nameCell);
+
+        let timeCell = document.createElement('td');
+        timeCell.textContent = result.execution_time;
+        row.appendChild(timeCell);
+
+        let memoryCell = document.createElement('td');
+        memoryCell.textContent = result.memory_usage;
+        row.appendChild(memoryCell);
+
+        let imageSpaceCell = document.createElement('td');
+        imageSpaceCell.textContent = result.image_size;
+        row.appendChild(imageSpaceCell);
+
+
+        tableBody.appendChild(row);
+    });
 }
 
 function handleRaceError(error) {
+    resultContainer.style.display = "block";
     resultContainer.innerHTML = error;
-    showImplButton.style.display = "block"
+    resultActions.style.display = "block"
 }
 
 function endRace() {
@@ -107,10 +161,10 @@ function endRace() {
 
 // This function will update the implementations view
 function showImplementations() {
-    showImplButton.style.display = "none"
+    resultActions.style.display = "none"
     implementationsDiv.innerHTML = "";
     logElement.innerHTML = "";
-    resultContainer.innerHTML = "";
+    resultContainer.style.display = "none";
 
     // Iterate over each language in the implementations object
     let languageCount = 0;

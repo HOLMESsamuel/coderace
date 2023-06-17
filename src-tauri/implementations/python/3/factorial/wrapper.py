@@ -11,8 +11,8 @@ def main():
     end_time = time.time()
     elapsed_time = end_time - start_time
     print_(result)
-    print_(elapsed_time)
-    print_(mem_usage)
+    print_("{:.3f}".format(elapsed_time))
+    print_("{:.1f}".format(mem_usage))
 
 if __name__ == "__main__":
     main()

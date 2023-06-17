@@ -153,3 +153,34 @@ main {
     transition: transform 0.3s ease;
 }
 
+#result {
+    display: none;
+}
+
+#results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #3498db;
+}
+
+#results-table th, #results-table td {
+    border: 1px solid #3498db;
+    text-align: left;
+    padding: 8px;
+}
+
+#results-table th {
+    background-color: #3498db;
+    color: #fff;
+}
+
+#results-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#result-actions {
+    display: none;
+}
+
+

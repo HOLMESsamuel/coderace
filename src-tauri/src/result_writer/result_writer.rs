@@ -1,10 +1,10 @@
 use std::io;
 use crate::models::BenchmarkInstructions;
-use crate::models::Result;
+use crate::models::BenchmarkResult;
 use crate::command_runner::docker_command;
 
-pub fn run_docker_images(benchmark_instructions: &BenchmarkInstructions) -> io::Result<Vec<Result>> {
-    let mut results: Vec<Result> = Vec::new();
+pub fn run_docker_images(benchmark_instructions: &BenchmarkInstructions) -> io::Result<Vec<BenchmarkResult>> {
+    let mut results: Vec<BenchmarkResult> = Vec::new();
     for language in &benchmark_instructions.languages {
         for version in &language.versions {
             for implementation in &version.implementations {
@@ -14,9 +14,10 @@ pub fn run_docker_images(benchmark_instructions: &BenchmarkInstructions) -> io::
                     Ok(output) => {
                         let output_str = String::from_utf8_lossy(&output.stdout);
                         let lines: Vec<&str> = output_str.lines().collect();
-                        let mut result: Result = Result {
+                        let mut result: BenchmarkResult = BenchmarkResult {
                             language: language.name.to_string(),
                             version: version.version.to_string(),
+                            name: implementation.name.to_string(),
                             execution_time: lines[1].to_string(),
                             memory_usage: lines[2].to_string(),
                             image_size: "".to_string(),

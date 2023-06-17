@@ -45,8 +45,28 @@
             <!-- Implementations will be dynamically inserted here -->
         </div>
         <div id="log"></div>
-        <div id="result"></div>
-        <button id="show-impl">Show implementations</button>
+        <div id="result">
+            <table id="results-table">
+                <thead>
+                <tr>
+                    <th>Language</th>
+                    <th>Version</th>
+                    <th>Name</th>
+                    <th>Time (s)</th>
+                    <th>Memory Usage (Mb)</th>
+                    <th>Image Space</th>
+                    <!-- Add more headers as needed -->
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+        <div id="result-actions">
+            <button id="show-impl">Show implementations</button>
+            <button id="save-results">Save results</button>
+        </div>
     </div>
 </main>
 </body>

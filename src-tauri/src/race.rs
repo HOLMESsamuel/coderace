@@ -5,13 +5,16 @@ use crate::command_runner::docker_command::is_docker_running;
 use crate::folder_manager;
 use crate::result_writer::result_writer::run_docker_images;
 use tauri::Window;
+use crate::models::BenchmarkResult;
 
 #[tauri::command]
-pub async fn race(window: Window) -> Result<String, String>{
+pub async fn race(window: Window) -> Result<String, String> {
 
     let log = |message: &str| {
         window.emit("LOG", message).unwrap();
     };
+
+    let mut results = Vec::new();
 
     match folder_manager::folder_reader::read_implementations_folder() {
         Ok(benchmark_instructions) => {
@@ -34,14 +37,15 @@ pub async fn race(window: Window) -> Result<String, String>{
                             println!("memory usage : {} Mb", result.memory_usage);
                             println!("image size : {} bytes", result.image_size);
                             println!();
+                            results.push(result);
                         }
                     },
                     Err(e) => eprintln!("Error running docker images: {}", e),
                 }
                 remove_dangling_images();
-                Ok("Race completed!".to_string())
+                Ok(serde_json::to_string(&results).unwrap())
             } else {
-                Ok("Docker is not installed or not running".to_string())
+                Err("Docker is not installed or not running".to_string())
             }
 
         }
@@ -50,5 +54,4 @@ pub async fn race(window: Window) -> Result<String, String>{
             return Err("Error reading folder: ".to_string() + &*e.to_string());
         }
     }
-
 }
