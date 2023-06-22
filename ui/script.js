@@ -40,16 +40,21 @@ addImplementationButton.addEventListener('click', () => {
 
     // Check if any of the input fields are empty
     if (!languageInput.value || !versionInput.value || !implementationInput.value) {
-        // Display an error message
         errorDiv.textContent = 'Please fill out all fields before adding the implementation.';
     } else {
         // The input fields are not empty, continue with adding the implementation
-        errorDiv.textContent = '';
-        invoke('open_implementation_form_window', {languageName: languageInput.value, versionName: versionInput.value, implementationName: implementationInput.value});
-        versionInput.innerHTML = "";
-        implementationInput.innerHTML = "";
+        addImplementation(languageInput.value, versionInput.value, implementationInput.value);
     }
 });
+
+function addImplementation(language, version, implementation) {
+    let versionInput = document.getElementById('impl-version');
+    let implementationInput = document.getElementById('impl-name');
+    errorDiv.textContent = '';
+    invoke('open_implementation_form_window', {languageName: language, versionName: version, implementationName: implementation});
+    versionInput.innerHTML = "";
+    implementationInput.innerHTML = "";
+}
 
 
 startButton.addEventListener('click', function() {
@@ -208,13 +213,16 @@ function showImplementations() {
             implementations[language][version].forEach(implementation => {
                 let implementationDiv = document.createElement("div");
                 implementationDiv.className = 'implementation';
-                implementationDiv.innerHTML = `<button>${implementation}</button>`;
+                let implementationButton = document.createElement("button");
+                implementationButton.textContent = implementation;
 
-                // Add event listener to implementationDiv to stop event bubbling
-                implementationDiv.addEventListener("click", function(e) {
+                // Add event listener to button to stop event bubbling and call addImplementation
+                implementationButton.addEventListener("click", function(e) {
                     e.stopPropagation();
+                    addImplementation(language, version, implementation);
                 });
 
+                implementationDiv.appendChild(implementationButton);
                 versionDiv.appendChild(implementationDiv);
             });
 

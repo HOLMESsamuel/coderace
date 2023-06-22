@@ -5,12 +5,11 @@ use crate::command_runner::docker_command::is_docker_running;
 use crate::folder_manager;
 use crate::result_writer::result_writer::run_docker_images;
 use tauri::Window;
-use crate::models::BenchmarkResult;
 
 #[tauri::command]
 pub async fn race(window: Window) -> Result<String, String> {
 
-    let log = |message: &str| {
+    let log = |message: String| {
         window.emit("LOG", message).unwrap();
     };
 
@@ -19,16 +18,16 @@ pub async fn race(window: Window) -> Result<String, String> {
     match folder_manager::folder_reader::read_implementations_folder() {
         Ok(benchmark_instructions) => {
             match write_folders(&benchmark_instructions) {
-                Ok(()) => log("wrappers created successfully"),
+                Ok(()) => log("wrappers created successfully".to_string()),
                 Err(e) => eprintln!("Error writing folders: {}", e),
             };
             if is_docker_running() {
-                log("building docker images...");
+                log("building docker images...".to_string());
                 match build_docker_images(&benchmark_instructions) {
                     Ok(()) => println!("docker images built"),
                     Err(e) => eprintln!("Error building docker images: {}", e),
                 };
-                log("running docker images...");
+                log("running docker images...".to_string());
                 match run_docker_images(&benchmark_instructions) {
                     Ok(r) => {
                         for result in r {
@@ -40,7 +39,11 @@ pub async fn race(window: Window) -> Result<String, String> {
                             results.push(result);
                         }
                     },
-                    Err(e) => eprintln!("Error running docker images: {}", e),
+                    Err(e) =>  {
+                        eprintln!("Error running docker images: {}", e);
+                        remove_dangling_images();
+                        return Err(e);
+                    },
                 }
                 remove_dangling_images();
                 Ok(serde_json::to_string(&results).unwrap())

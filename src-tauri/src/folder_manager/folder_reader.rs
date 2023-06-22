@@ -1,6 +1,31 @@
 use std::{fs, io};
 use std::path::{Path, PathBuf};
 use crate::models::{BenchmarkInstructions, Config, ImplementationFolder, Language, LanguageVersion};
+use std::collections::HashMap;
+
+pub fn read_implementation_folder_files(language_name: String, version_name: String, implementation_name: String) -> Result<Vec<String>, String> {
+    let path = format!("implementations/{}/{}/{}", language_name, version_name, implementation_name);
+
+    match fs::read_dir(Path::new(&path)) {
+        Ok(entries) => {
+            let mut files = Vec::new();
+            for entry in entries {
+                if let Ok(entry) = entry {
+                    // If the entry is a file, add its name to the list
+                    if let Ok(metadata) = entry.metadata() {
+                        if metadata.is_file() {
+                            if let Some(file_name) = entry.file_name().to_str() {
+                                files.push(file_name.to_string());
+                            }
+                        }
+                    }
+                }
+            }
+            Ok(files)
+        },
+        Err(_) => Err(format!("Failed to read directory: {}", path)),
+    }
+}
 
 pub fn read_implementations_folder() -> io::Result<BenchmarkInstructions> {
     let folder_path = Path::new("implementations");
@@ -13,8 +38,6 @@ pub fn read_implementations_folder() -> io::Result<BenchmarkInstructions> {
     let languages = read_language_folder(folder_path)?;
     Ok(BenchmarkInstructions { languages })
 }
-
-use std::collections::HashMap;
 
 #[tauri::command]
 pub fn read_implementations_folder_for_front() -> Result<String, String> {

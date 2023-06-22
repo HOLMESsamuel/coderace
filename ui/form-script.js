@@ -176,7 +176,6 @@ async function setupListeners() {
         //split on both / and \
         let fileName = payload.split(/[/\\]/).pop();
         importedFileNames.push(fileName);
-        console.log(importedFilePaths);
         updateFileList();
     });
 }
@@ -224,4 +223,17 @@ function updateFileList() {
     });
 }
 
+function loadData() {
+    invoke('load_data', {languageName: languageName, versionName: versionName, implementationName: implementationName }).then(handleData);
+}
+
+function handleData(response) {
+    let data = JSON.parse(response);
+    data.files.forEach(file => {
+        writtenFileNames.push(file);
+    });
+    updateFileList();
+}
+
 setupListeners();
+loadData();

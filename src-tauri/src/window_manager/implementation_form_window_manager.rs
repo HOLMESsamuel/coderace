@@ -1,5 +1,7 @@
-use tauri::Manager;
+use tauri::{Manager, Window};
 use crate::folder_manager::folder_writer::folder_creator::folder_creator;
+use crate::folder_manager::folder_reader::read_implementation_folder_files;
+use serde_json::json;
 
 #[tauri::command]
 pub async fn open_implementation_form_window(app_handle: tauri::AppHandle, language_name: String, version_name: String, implementation_name: String) {
@@ -35,5 +37,23 @@ pub async fn close_implementation_form_window(app_handle: tauri::AppHandle) {
     let window_label = "implementation-form".to_string();
     if let Some(window) = app_handle.get_window(&window_label) {
         window.close().expect("failed to close window");
+    }
+}
+
+#[tauri::command]
+pub async fn load_data(language_name: String, version_name: String, implementation_name: String) -> Result<String, String>{
+    let generated_files = vec!["config.json","Dockerfile","requirements.txt","wrapper.py"];
+
+    match read_implementation_folder_files(language_name, version_name, implementation_name) {
+        Ok(files) => {
+            // Filter out generated files
+            let filtered_files: Vec<String> = files.into_iter()
+                .filter(|file| !generated_files.contains(&file.as_str()))
+                .collect();
+
+            let json = json!({ "files": filtered_files });
+            Ok(json.to_string())
+        }
+        Err(e) => Err(e)
     }
 }

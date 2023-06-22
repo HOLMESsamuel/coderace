@@ -15,6 +15,7 @@ use crate::race::race;
 use crate::window_manager::implementation_form_window_manager::open_implementation_form_window;
 use crate::window_manager::implementation_form_window_manager::submit_implementation_form;
 use crate::window_manager::implementation_form_window_manager::close_implementation_form_window;
+use crate::window_manager::implementation_form_window_manager::load_data;
 use crate::folder_manager::folder_reader::read_implementations_folder_for_front;
 use crate::folder_manager::folder_writer::folder_writer::create_implementation_folder;
 use tauri::{CustomMenuItem, Menu, Submenu, Manager, Window};
@@ -37,7 +38,8 @@ fn main() {
         open_implementation_form_window,
         close_implementation_form_window,
         submit_implementation_form,
-        open_file_dialog])
+        open_file_dialog,
+        load_data])
       .on_menu_event(|event| {
         match event.menu_item_id() {
           "exit" => {
