@@ -1,10 +1,13 @@
 use std::{fs, io};
 use std::path::{Path, PathBuf};
-use crate::models::{BenchmarkInstructions, Config, ImplementationFolder, Language, LanguageVersion};
+use crate::models::{BenchmarkInstructions, Config, File, ImplementationFolder, Language, LanguageVersion};
 use std::collections::HashMap;
+use std::io::Read;
 
-pub fn read_implementation_folder_files(language_name: String, version_name: String, implementation_name: String) -> Result<Vec<String>, String> {
+pub fn read_implementation_folder_files(language_name: String, version_name: String, implementation_name: String) -> Result<Vec<File>, String> {
     let path = format!("implementations/{}/{}/{}", language_name, version_name, implementation_name);
+
+    let text_extensions = vec![".txt", ".js", ".html", ".json", ".rs", ".py"];
 
     match fs::read_dir(Path::new(&path)) {
         Ok(entries) => {
@@ -15,7 +18,26 @@ pub fn read_implementation_folder_files(language_name: String, version_name: Str
                     if let Ok(metadata) = entry.metadata() {
                         if metadata.is_file() {
                             if let Some(file_name) = entry.file_name().to_str() {
-                                files.push(file_name.to_string());
+                                let content = if text_extensions.iter().any(|ext| file_name.ends_with(ext)) {
+                                    // If the file has a text extension, attempt to read it as a text file
+                                    let mut file = match fs::File::open(entry.path()) {
+                                        Ok(file) => file,
+                                        Err(_) => continue,  // Skip this file if it can't be opened
+                                    };
+                                    let mut content = String::new();
+                                    match file.read_to_string(&mut content) {
+                                        Ok(_) => Some(content),
+                                        Err(_) => None,  // If the file can't be read as text, set its content to None
+                                    }
+                                } else {
+                                    None
+                                };
+                                let file = File {
+                                    name: file_name.to_string(),
+                                    modifiable: !content.is_none(),
+                                    content: if content.is_none() {"impossible to read".to_string()} else {content.expect("").to_string()}
+                                };
+                                files.push(file);
                             }
                         }
                     }

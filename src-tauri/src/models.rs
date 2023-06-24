@@ -11,6 +11,13 @@ pub struct ImplementationFolder {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+pub struct File {
+    pub name: String,
+    pub content: String,
+    pub modifiable: bool
+}
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Argument {
     pub value: String,
     pub argument_type: String

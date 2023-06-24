@@ -1,7 +1,8 @@
-use tauri::{Manager, Window};
+use tauri::{Manager};
 use crate::folder_manager::folder_writer::folder_creator::folder_creator;
 use crate::folder_manager::folder_reader::read_implementation_folder_files;
 use serde_json::json;
+use crate::models::File;
 
 #[tauri::command]
 pub async fn open_implementation_form_window(app_handle: tauri::AppHandle, language_name: String, version_name: String, implementation_name: String) {
@@ -47,8 +48,8 @@ pub async fn load_data(language_name: String, version_name: String, implementati
     match read_implementation_folder_files(language_name, version_name, implementation_name) {
         Ok(files) => {
             // Filter out generated files
-            let filtered_files: Vec<String> = files.into_iter()
-                .filter(|file| !generated_files.contains(&file.as_str()))
+            let filtered_files: Vec<File> = files.into_iter()
+                .filter(|file| !generated_files.contains(&file.name.as_str()))
                 .collect();
 
             let json = json!({ "files": filtered_files });

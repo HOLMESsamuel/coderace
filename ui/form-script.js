@@ -229,8 +229,9 @@ function loadData() {
 
 function handleData(response) {
     let data = JSON.parse(response);
+    console.log(data);
     data.files.forEach(file => {
-        writtenFileNames.push(file);
+        writtenFileNames.push(file.name);
     });
     updateFileList();
 }
