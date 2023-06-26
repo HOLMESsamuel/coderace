@@ -26,11 +26,12 @@ pub async fn open_implementation_form_window(app_handle: tauri::AppHandle, langu
 pub fn submit_implementation_form(language_name: String,
                                   version_name: String,
                                   implementation_name: String,
-                                  imported_file_names: Vec<String>,
-                                  imported_file_paths: Vec<String>,
-                                  written_file_names: Vec<String>,
-                                  written_file_contents: Vec<String>) {
-    folder_creator::fill_implementation_folder(language_name, version_name, implementation_name, imported_file_names, imported_file_paths, written_file_names, written_file_contents);
+                                  imported_files_json: String,
+                                  written_files_json: String) {
+    println!("form submitted");
+    let imported_files= serde_json::from_str(&imported_files_json).expect("impossible to deserialize");
+    let written_files = serde_json::from_str(&written_files_json).expect("impossible to deserialize");
+    folder_creator::fill_implementation_folder(language_name, version_name, implementation_name, imported_files, written_files);
 }
 
 #[tauri::command]

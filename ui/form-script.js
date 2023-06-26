@@ -16,18 +16,25 @@ let addFile = document.getElementById('add-file-button');
 let addFileFromComputerButton = document.getElementById('load-file-button');
 implementationTitle.innerHTML = implementationName;
 
-let importedFilePaths = [];
-let importedFileNames = [];
-let writtenFileContents = [];
-let writtenFileNames = [];
+let importedFiles = [];
+let writtenFiles = [];
 let argumentsList = [];
+
+class File {
+    constructor(path, name, content, modifiable) {
+        this.path = path;
+        this.name = name;
+        this.content = content;
+        this.modifiable = modifiable;
+    }
+}
 
 submitButton.addEventListener("click", () => {
     let errorDiv = document.getElementById("form-error");
     if(!methodNameInput.value) {
         errorDiv.textContent = 'Please fill out all fields before adding the implementation.';
     } else {
-        if(importedFileNames.length === 0 && writtenFileNames.length === 0) {
+        if(importedFiles.length === 0 && writtenFiles.length === 0) {
             errorDiv.textContent = 'You need to have at least one file containing the code to benchmark.';
         } else {
             if(checkAndGetArgumentList()) {
@@ -36,10 +43,8 @@ submitButton.addEventListener("click", () => {
                     languageName: languageName,
                     versionName: versionName,
                     implementationName: implementationName,
-                    importedFileNames : importedFileNames,
-                    importedFilePaths: importedFilePaths,
-                    writtenFileNames: writtenFileNames,
-                    writtenFileContents: writtenFileContents
+                    importedFilesJson : JSON.stringify(importedFiles),
+                    writtenFilesJson: JSON.stringify(writtenFiles)
                 });
                 emit("reload_implementations", {"message": "reload"});
                 invoke("close_implementation_form_window");
@@ -62,12 +67,12 @@ addFile.addEventListener("click", () => {
         errorDiv.innerHTML = "You must write a file name and a content to add it.";
     } else {
         if(isValidFilename(fileName.value)) {
-            if(writtenFileNames.includes(fileName.value) || importedFileNames.includes(fileName.value)) {
+            if(writtenFiles.some(f => f.name === fileName.value) || importedFiles.some(f => f.name === fileName.value)) {
                 errorDiv.innerHTML = "This file name already exists, chosse another";
             } else {
                 errorDiv.innerHTML = "";
-                writtenFileNames.push(fileName.value);
-                writtenFileContents.push(fileContent.value);
+                let file = new File("", fileName.value, fileContent.value, false);
+                writtenFiles.push(file);
                 updateFileList();
                 fileName.value = "";
                 fileContent.value = "";
@@ -128,9 +133,9 @@ function checkAndGetArgumentList() {
 
     argumentsList = [];
 
-    for(let i = 0; i < argumentRows.length; i++) {
-        let argumentValueInput = argumentRows[i].getElementsByClassName('argument-value')[0];
-        let argumentTypeInput = argumentRows[i].getElementsByClassName('argument-type')[0];
+    for(const element of argumentRows) {
+        let argumentValueInput = element.getElementsByClassName('argument-value')[0];
+        let argumentTypeInput = element.getElementsByClassName('argument-type')[0];
 
         if(argumentValueInput.value && argumentTypeInput.value) {
             let argument = {
@@ -155,8 +160,8 @@ function createAndAddConfigJson() {
     };
 
     // Convert jsonContent to a string and add it to writtenFileContent
-    writtenFileContents.push(JSON.stringify(jsonContent));
-    writtenFileNames.push("config.json");
+    let config = new File("", "config.json", JSON.stringify(jsonContent), false);
+    writtenFiles.push(config);
 }
 
 
@@ -172,55 +177,59 @@ addFileFromComputerButton.addEventListener("click", function() {
 async function setupListeners() {
     await listen('file-selected', (event) => {
         let payload = event.payload;
-        importedFilePaths.push(payload);
         //split on both / and \
         let fileName = payload.split(/[/\\]/).pop();
-        importedFileNames.push(fileName);
+        let file = new File(event.payload, fileName, "", false);
+        importedFiles.push(file);
         updateFileList();
     });
+}
+
+function displayFiles(files) {
+    let fileListContainer = document.getElementById("file-list");
+    files.forEach((file, index) => {
+        let fileLine = document.createElement('div');
+
+        // create the delete button for this file
+        let deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => {
+            files.splice(index, 1);
+            updateFileList();
+        });
+
+        // add text and delete button to the line
+        fileLine.textContent = file.name;
+        fileLine.appendChild(deleteButton);
+
+        // create modify button for the file
+        if(file.modifiable) {
+            let modifyButton = document.createElement('button');
+            modifyButton.textContent = "Modify";
+            modifyButton.addEventListener('click', () => {
+                openModifyFile(file);
+            });
+            fileLine.appendChild(modifyButton);
+        }
+
+        fileListContainer.appendChild(fileLine);
+    });
+}
+
+function openModifyFile(file) {
+    let fileName = document.getElementById("file-name");
+    let fileContent = document.getElementById("file-content");
+
+    fileName.value = file.name;
+    fileContent.value = file.content;
 }
 
 function updateFileList() {
     let fileListContainer = document.getElementById("file-list");
     fileListContainer.innerHTML = "";
 
-    importedFileNames.forEach((fileName, index) => {
-        let fileLine = document.createElement('div');
-
-        // create the delete button for this file
-        let deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.addEventListener('click', () => {
-            importedFilePaths.splice(index, 1);
-            importedFileNames.splice(index, 1);
-            updateFileList();
-        });
-
-        // add text and delete button to the line
-        fileLine.textContent = fileName;
-        fileLine.appendChild(deleteButton);
-
-        fileListContainer.appendChild(fileLine);
-    });
-
-    writtenFileNames.forEach((fileName, index) => {
-        let fileLine = document.createElement('div');
-
-        // create the delete button for this file
-        let deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.addEventListener('click', () => {
-            writtenFileContents.splice(index, 1);
-            writtenFileNames.splice(index, 1);
-            updateFileList();
-        });
-
-        // add text and delete button to the line
-        fileLine.textContent = fileName;
-        fileLine.appendChild(deleteButton);
-
-        fileListContainer.appendChild(fileLine);
-    });
+    displayFiles(importedFiles);
+    displayFiles(writtenFiles);
 }
 
 function loadData() {
@@ -231,7 +240,7 @@ function handleData(response) {
     let data = JSON.parse(response);
     console.log(data);
     data.files.forEach(file => {
-        writtenFileNames.push(file.name);
+        writtenFiles.push(file);
     });
     updateFileList();
 }

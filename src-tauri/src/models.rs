@@ -12,6 +12,7 @@ pub struct ImplementationFolder {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct File {
+    pub path: String,
     pub name: String,
     pub content: String,
     pub modifiable: bool
