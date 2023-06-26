@@ -2,3 +2,4 @@
 /output
 /.idea/sonarlint/
 *.pb
+.idea/sonarlint/issuestore/index.pb

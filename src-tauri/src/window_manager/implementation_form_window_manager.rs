@@ -2,7 +2,7 @@ use tauri::{Manager};
 use crate::folder_manager::folder_writer::folder_creator::folder_creator;
 use crate::folder_manager::folder_reader::read_implementation_folder_files;
 use serde_json::json;
-use crate::models::File;
+use crate::models::{Config, File};
 
 #[tauri::command]
 pub async fn open_implementation_form_window(app_handle: tauri::AppHandle, language_name: String, version_name: String, implementation_name: String) {
@@ -28,7 +28,6 @@ pub fn submit_implementation_form(language_name: String,
                                   implementation_name: String,
                                   imported_files_json: String,
                                   written_files_json: String) {
-    println!("form submitted");
     let imported_files= serde_json::from_str(&imported_files_json).expect("impossible to deserialize");
     let written_files = serde_json::from_str(&written_files_json).expect("impossible to deserialize");
     folder_creator::fill_implementation_folder(language_name, version_name, implementation_name, imported_files, written_files);
@@ -47,15 +46,30 @@ pub async fn load_data(language_name: String, version_name: String, implementati
     let generated_files = vec!["config.json","Dockerfile","requirements.txt","wrapper.py"];
 
     match read_implementation_folder_files(language_name, version_name, implementation_name) {
-        Ok(files) => {
-            // Filter out generated files
-            let filtered_files: Vec<File> = files.into_iter()
+        Ok(mut files) => {
+            let (method_name, arguments) = if let Some(file) = files.iter().find(|&file| file.name == "config.json") {
+                let config:Config = serde_json::from_str(&file.content).expect("impossible to deserialize");
+                (Some(config.method_name), Some(config.arguments))
+            } else {
+                println!("No config.json file");
+                (None, None)
+            };
+
+            // Filter out generated files and collect back into files
+            files = files.into_iter()
                 .filter(|file| !generated_files.contains(&file.name.as_str()))
                 .collect();
 
-            let json = json!({ "files": filtered_files });
+            let json = json!({ "files": files, "methodName": method_name, "arguments": arguments});
             Ok(json.to_string())
         }
         Err(e) => Err(e)
     }
 }
+
+
+
+
+
+
+

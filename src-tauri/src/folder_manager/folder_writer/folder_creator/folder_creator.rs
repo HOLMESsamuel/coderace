@@ -17,11 +17,8 @@ pub fn fill_implementation_folder(language_name: String,
     let path = Path::new(&path_str);
     fs::create_dir_all(path).expect("Unable to create folder");
 
-    println!("folder created");
-
     // Write the new files
     for i in 0..written_files.len() {
-        println!("write file");
         let file_path = path.join(&written_files[i].name);
         fs::write(file_path, &written_files[i].content).expect("unable to create file");
     }

@@ -5,14 +5,11 @@ use crate::models::BenchmarkInstructions;
 
 #[tauri::command]
 pub fn create_implementation_folder(language_name: String, version_name: String, implementation_name: String) -> Result<String, String> {
-    println!("hello");
     let path_string = format!("./implementations/{}/{}/{}", language_name, version_name, implementation_name);
     let path = Path::new(&path_string);
     if path.exists() {
-        println!("not createed");
         Err("The implementation folder already exists".to_string())
     } else {
-        println!("created");
         fs::create_dir_all(&path).expect("error creating the folders");
         Ok("Folder created".to_string())
     }

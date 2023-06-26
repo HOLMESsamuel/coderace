@@ -96,6 +96,10 @@ cancelButton.addEventListener("click", () => {
 })
 
 document.getElementById('add-argument').addEventListener('click', function() {
+    addArgumentLine(null, null);
+});
+
+function addArgumentLine(type, value) {
     let argumentContainer = document.getElementById('arguments-container');
     let newArgumentRow = document.createElement('div');
     newArgumentRow.classList.add('argument-row');
@@ -104,12 +108,18 @@ document.getElementById('add-argument').addEventListener('click', function() {
     newValueInput.type = 'text';
     newValueInput.classList.add('argument-value');
     newValueInput.placeholder = 'Argument Value';
+    if(type != null) {
+        newValueInput.value = value;
+    }
     newArgumentRow.appendChild(newValueInput);
 
     let newTypeInput = document.createElement('input');
     newTypeInput.type = 'text';
     newTypeInput.classList.add('argument-type');
     newTypeInput.placeholder = 'Argument Type';
+    if(type != null) {
+        newTypeInput.value = type;
+    }
     newArgumentRow.appendChild(newTypeInput);
 
     // Create delete button
@@ -125,7 +135,7 @@ document.getElementById('add-argument').addEventListener('click', function() {
     newArgumentRow.appendChild(deleteButton);
 
     argumentContainer.appendChild(newArgumentRow);
-});
+}
 
 function checkAndGetArgumentList() {
     let argumentContainer = document.getElementById('arguments-container');
@@ -241,6 +251,10 @@ function handleData(response) {
     console.log(data);
     data.files.forEach(file => {
         writtenFiles.push(file);
+    });
+    methodNameInput.value = data.methodName;
+    data.arguments.forEach(argument => {
+        addArgumentLine(argument.argument_type, argument.value);
     });
     updateFileList();
 }

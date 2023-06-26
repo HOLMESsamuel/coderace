@@ -3,8 +3,6 @@ S
 #src-tauri/src/folder_manager/mod.rs,8\6\862f779b1b204410571c68ad9905632c443ae6e3
 c
 3src-tauri/src/folder_manager/folder_archiver/mod.rs,9\b\9b611e0ff1f21195ee8e1f8502606a73cd6f5df4
-k
-;src-tauri/src/folder_manager/folder_writer/folder_writer.rs,0\f\0fcadb986b065fe6f3059a2411e74dd92ccc08ff
 <
 ui/style.css,9\7\97970bad409487330302f6ef0ea5885e8ab43c85
 w
