@@ -17,17 +17,45 @@ pub fn fill_implementation_folder(language_name: String,
     let path = Path::new(&path_str);
     fs::create_dir_all(path).expect("Unable to create folder");
 
-    // Write the new files
-    for i in 0..written_files.len() {
-        let file_path = path.join(&written_files[i].name);
-        fs::write(file_path, &written_files[i].content).expect("unable to create file");
-    }
+    clean_folder(&imported_files, &written_files, path);
 
-    // Copy the imported files
-    for i in 0..imported_files.len() {
-        let source_path = Path::new(&imported_files[i].path);
-        let destination_path = path.join(&imported_files[i].name);
+    write_files(written_files, path);
+    copy_files(imported_files, path);
+}
+
+fn write_files(written_files: Vec<File>, path: &Path) {
+    for file in &written_files {
+        let file_path = path.join(&file.name);
+        if !file.content.is_empty() {
+            println!("file name : {}, content : {}", &file.name, &file.content);
+            fs::write(file_path, &file.content).expect("unable to create file");
+        }
+    }
+}
+
+fn copy_files(imported_files: Vec<File>, path: &Path) {
+    for file in &imported_files {
+        let source_path = Path::new(&file.path);
+        let destination_path = path.join(&file.name);
         fs::copy(source_path, destination_path).expect("unable to copy file");
     }
+}
 
+fn clean_folder(imported_files: &Vec<File>, written_files: &Vec<File>, path: &Path) {
+    let mut updated_files: Vec<String> = imported_files.iter().map(|file| file.name.clone()).collect();
+    updated_files.extend(written_files.iter().map(|file| file.name.clone()));
+
+    // Delete all files that are not in updated_files
+    if let Ok(entries) = fs::read_dir(&path) {
+        for entry in entries {
+            if let Ok(entry) = entry {
+                let file_name = entry.file_name();
+                if let Some(file_name_str) = file_name.to_str() {
+                    if !updated_files.contains(&file_name_str.to_string()) {
+                        fs::remove_file(entry.path()).expect("Unable to remove file");
+                    }
+                }
+            }
+        }
+    }
 }

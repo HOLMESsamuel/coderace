@@ -2,7 +2,7 @@ use tauri::{Manager};
 use crate::folder_manager::folder_writer::folder_creator::folder_creator;
 use crate::folder_manager::folder_reader::read_implementation_folder_files;
 use serde_json::json;
-use crate::models::{Config, File};
+use crate::models::{Config};
 
 #[tauri::command]
 pub async fn open_implementation_form_window(app_handle: tauri::AppHandle, language_name: String, version_name: String, implementation_name: String) {

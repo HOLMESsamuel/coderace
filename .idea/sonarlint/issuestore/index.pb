@@ -5,8 +5,6 @@ c
 3src-tauri/src/folder_manager/folder_archiver/mod.rs,9\b\9b611e0ff1f21195ee8e1f8502606a73cd6f5df4
 <
 ui/style.css,9\7\97970bad409487330302f6ef0ea5885e8ab43c85
-w
-G.idea/sonarlint/issuestore/0/f/0fcadb986b065fe6f3059a2411e74dd92ccc08ff,3\5\35ffa5bdbacfec2e75713fe9b93f18c89ac14a6f
 :
 
 .gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
@@ -20,3 +18,5 @@ A
 ui/home-style.css,e\d\edc0fbb1edc05fb9a88f4b493ed4430f55147d4f
 ‚
 Rsrc-tauri/src/folder_manager/folder_writer/wrapper_writer/python_wrapper_writer.rs,6\7\67de8cbd50550e39bdffb4a0fc06c13cf0af4c11
+c
+3src-tauri/src/window_manager/main_window_manager.rs,6\e\6e0b254315e9156283b7cd76899f9876354e494a

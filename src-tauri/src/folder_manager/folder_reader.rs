@@ -36,7 +36,7 @@ pub fn read_implementation_folder_files(language_name: String, version_name: Str
                                     path: "".to_string(),
                                     name: file_name.to_string(),
                                     modifiable: !content.is_none(),
-                                    content: if content.is_none() {"impossible to read".to_string()} else {content.expect("").to_string()}
+                                    content: if content.is_none() {"".to_string()} else {content.expect("").to_string()}
                                 };
                                 files.push(file);
                             }
