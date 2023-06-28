@@ -222,7 +222,19 @@ function showImplementations() {
                     addImplementation(language, version, implementation);
                 });
 
+                // Create delete button
+                let deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "deleteButton";
+
+                // Add event listener to delete button to stop event bubbling and call deleteImplementation
+                deleteButton.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    deleteImplementation(language, version, implementation);
+                });
+
                 implementationDiv.appendChild(implementationButton);
+                implementationDiv.appendChild(deleteButton);
                 versionDiv.appendChild(implementationDiv);
             });
 
@@ -233,6 +245,11 @@ function showImplementations() {
         implementationsDiv.appendChild(languageDiv);
         languageCount++;
     }
+}
+
+function deleteImplementation(language, version, implementation) {
+    invoke('delete_implementation_folder', {languageName: language, versionName: version, implementationName: implementation});
+    loadFilesystem();
 }
 
 // Call the function to initially update the implementations view

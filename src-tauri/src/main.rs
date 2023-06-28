@@ -18,6 +18,7 @@ use crate::window_manager::implementation_form_window_manager::close_implementat
 use crate::window_manager::implementation_form_window_manager::load_data;
 use crate::folder_manager::folder_reader::read_implementations_folder_for_front;
 use crate::folder_manager::folder_writer::folder_writer::create_implementation_folder;
+use crate::folder_manager::folder_writer::folder_writer::delete_implementation_folder;
 use tauri::{CustomMenuItem, Menu, Submenu, Manager, Window};
 use folder_manager::folder_writer::folder_creator::folder_creator;
 use folder_manager::folder_archiver::folder_archiver;
@@ -39,7 +40,8 @@ fn main() {
         close_implementation_form_window,
         submit_implementation_form,
         open_file_dialog,
-        load_data])
+        load_data,
+        delete_implementation_folder])
       .on_menu_event(|event| {
         match event.menu_item_id() {
           "exit" => {
