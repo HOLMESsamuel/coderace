@@ -12,11 +12,11 @@ c
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
 P
  ui/implementation-form-style.css,f\0\f09f66ff134ba355dc7a29a09ae4c9e41e6e99db
-=
-ui/index.html,c\4\c44ddce8b9a8d9a4ae4ddb8f1f2dad15c4987112
 A
 ui/home-style.css,e\d\edc0fbb1edc05fb9a88f4b493ed4430f55147d4f
 ‚
 Rsrc-tauri/src/folder_manager/folder_writer/wrapper_writer/python_wrapper_writer.rs,6\7\67de8cbd50550e39bdffb4a0fc06c13cf0af4c11
 c
 3src-tauri/src/window_manager/main_window_manager.rs,6\e\6e0b254315e9156283b7cd76899f9876354e494a
+r
+Bsrc-tauri/src/window_manager/implementation_form_window_manager.rs,0\7\07ed3a5df33e249970c9dbbd7ad7db68783a962e

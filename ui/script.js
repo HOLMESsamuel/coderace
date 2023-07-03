@@ -12,8 +12,12 @@ let showImplButton = document.getElementById('show-impl');
 let addImplementationButton = document.getElementById('add-implementation')
 let errorDiv = document.getElementById("form-error");
 let resultActions = document.getElementById("result-actions");
+let languageDropdown = document.getElementById("impl-lang");
 
 let implementations = {}
+
+let pythonAvailableVersions = ["2", "3"];
+let rustAvailableVersions = ["4", "5"];
 
 function logMessage(message) {
     logElement.innerHTML += '<p>' + message + '</p>';
@@ -46,6 +50,28 @@ addImplementationButton.addEventListener('click', () => {
         addImplementation(languageInput.value, versionInput.value, implementationInput.value);
     }
 });
+
+languageDropdown.addEventListener("input", () => {
+    switch (languageDropdown.value) {
+        case "python":
+            loadVersionList(pythonAvailableVersions);
+            break;
+        case "rust":
+            loadVersionList(rustAvailableVersions);
+            break;
+    }
+});
+
+function loadVersionList(list) {
+    let versionDropdown = document.getElementById("impl-version");
+    versionDropdown.innerHTML = "";
+    for (const version of list) {
+        let row = document.createElement('option');
+        row.value = version;
+        row.innerHTML = version;
+        versionDropdown.appendChild(row);
+    };
+}
 
 function addImplementation(language, version, implementation) {
     let versionInput = document.getElementById('impl-version');
@@ -254,4 +280,6 @@ function deleteImplementation(language, version, implementation) {
 
 // Call the function to initially update the implementations view
 loadFilesystem();
+//set the version dropdown
+loadVersionList(pythonAvailableVersions);
 
