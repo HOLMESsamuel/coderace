@@ -14,8 +14,6 @@ P
  ui/implementation-form-style.css,f\0\f09f66ff134ba355dc7a29a09ae4c9e41e6e99db
 A
 ui/home-style.css,e\d\edc0fbb1edc05fb9a88f4b493ed4430f55147d4f
-‚
-Rsrc-tauri/src/folder_manager/folder_writer/wrapper_writer/python_wrapper_writer.rs,6\7\67de8cbd50550e39bdffb4a0fc06c13cf0af4c11
 c
 3src-tauri/src/window_manager/main_window_manager.rs,6\e\6e0b254315e9156283b7cd76899f9876354e494a
 r
