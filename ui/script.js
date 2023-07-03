@@ -70,15 +70,13 @@ function loadVersionList(list) {
         row.value = version;
         row.innerHTML = version;
         versionDropdown.appendChild(row);
-    };
+    }
 }
 
 function addImplementation(language, version, implementation) {
-    let versionInput = document.getElementById('impl-version');
     let implementationInput = document.getElementById('impl-name');
     errorDiv.textContent = '';
     invoke('open_implementation_form_window', {languageName: language, versionName: version, implementationName: implementation});
-    versionInput.innerHTML = "";
     implementationInput.innerHTML = "";
 }
 
