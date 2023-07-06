@@ -45,6 +45,8 @@ addImplementationButton.addEventListener('click', () => {
     // Check if any of the input fields are empty
     if (!languageInput.value || !versionInput.value || !implementationInput.value) {
         errorDiv.textContent = 'Please fill out all fields before adding the implementation.';
+    } else if (/[ $]/.test(implementationInput.value)) {
+            errorDiv.textContent = 'The implementation name must not contain spaces or dollar signs ($).';
     } else {
         // The input fields are not empty, continue with adding the implementation
         addImplementation(languageInput.value, versionInput.value, implementationInput.value);
