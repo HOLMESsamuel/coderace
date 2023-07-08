@@ -17,15 +17,19 @@ pub(crate) fn write_rust_folder(language: &Language) -> std::io::Result<()> {
 }
 
 fn write_rust_cargo_file(implementation: &ImplementationFolder) -> std::io::Result<()> {
-    let requirements_path = implementation.path.join("cargo.toml");
-    //the first 3 lines declares the main method as wrapper.rs instead of main.rs by default
+    let requirements_path = implementation.path.join("Cargo.toml");
+    //the bin lines declares the main method as wrapper.rs instead of main.rs by default
     let dependencies = vec![
+        "[package]",
+        "name = \"wrapper\"",
+        "version = \"0.1.0\"",
+        "edition = \"2021\"",
         "[[bin]]",
         "name = \"wrapper\"",
-        "path = \"src/wrapper.rs\"",
-        "[[dependencies]]",
+        "path = \"wrapper.rs\"",
+        "[dependencies]",
         "time = \"0.1\"",
-        "mem_info = \"0.5\""
+        "sys-info = \"0.5\""
     ];
 
     write_in_file_if_not_exist(requirements_path, dependencies)

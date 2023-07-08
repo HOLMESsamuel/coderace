@@ -1,0 +1,10 @@
+[package]
+name = "wrapper"
+version = "0.1.0"
+edition = "2021"
+[[bin]]
+name = "wrapper"
+path = "wrapper.rs"
+[dependencies]
+time = "0.1"
+sys-info = "0.5"

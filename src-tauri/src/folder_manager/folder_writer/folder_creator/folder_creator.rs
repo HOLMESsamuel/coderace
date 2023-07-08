@@ -27,7 +27,6 @@ fn write_files(written_files: Vec<File>, path: &Path) {
     for file in &written_files {
         let file_path = path.join(&file.name);
         if !file.content.is_empty() {
-            println!("file name : {}, content : {}", &file.name, &file.content);
             fs::write(file_path, &file.content).expect("unable to create file");
         }
     }

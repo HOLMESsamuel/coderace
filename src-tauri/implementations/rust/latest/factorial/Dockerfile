@@ -1,7 +1,5 @@
-pub fn write_rust_dockerfile(version : &str) -> String {
-    let rust_dockerfile = format!(
-        "# Use the official Rust image as the base image
-FROM rust:{version}
+# Use the official Rust image as the base image
+FROM rust:latest
 
 # Set the working directory in the container
 WORKDIR /app
@@ -16,6 +14,4 @@ RUN cargo install --path .
 EXPOSE 80
 
 # Run the command to start the application
-CMD [\"cargo\", \"run\"]", version = version);
-    rust_dockerfile
-}
+CMD ["cargo", "run"]

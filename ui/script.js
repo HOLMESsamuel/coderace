@@ -16,8 +16,8 @@ let languageDropdown = document.getElementById("impl-lang");
 
 let implementations = {}
 
-let pythonAvailableVersions = ["2", "3"];
-let rustAvailableVersions = ["4", "5"];
+let pythonAvailableVersions = ["2", "3", "latest"];
+let rustAvailableVersions = ["latest"];
 
 function logMessage(message) {
     logElement.innerHTML += '<p>' + message + '</p>';

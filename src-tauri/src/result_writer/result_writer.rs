@@ -12,8 +12,9 @@ pub fn run_docker_images(benchmark_instructions: &BenchmarkInstructions) -> Resu
                 match docker_command::run_docker_image(&image_name) {
                     Ok(output) => {
                         let output_str = String::from_utf8_lossy(&output.stdout);
+                        println!("{}", output_str);
                         let lines: Vec<&str> = output_str.lines().collect();
-                        if lines.len() != 2 {
+                        if lines.len() != 3 {
                             return Err(output_str.to_string());
                         }
                         let mut result: BenchmarkResult = BenchmarkResult {

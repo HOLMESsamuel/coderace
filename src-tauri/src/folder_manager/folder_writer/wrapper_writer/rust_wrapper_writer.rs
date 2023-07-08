@@ -4,8 +4,9 @@ use std::process::Command;
 pub fn write_rust_wrapper(implementation_folder: &ImplementationFolder) -> String {
     let argument_string = build_argument_string(&implementation_folder.arguments);
     let wrapper_code = format!(
-        "extern crate time;
-extern crate mem_info;
+        "mod {module_name};
+extern crate time;
+extern crate sys_info;
 use {module_name}::{method_name};
 
 fn main() {{
@@ -14,16 +15,17 @@ fn main() {{
     let end_time = time::precise_time_ns();
     let elapsed_time = (end_time - start_time) as f64 / 1_000_000_000.0;
 
-    let mem_info = mem_info::get_mem_info().unwrap();
-    let mem_usage = mem_info.total - mem_info.avail;
+    let mem_info = sys_info::mem_info().unwrap();
+    let mem_usage = mem_info.total - mem_info.free;
 
-    println!(\"{{:?}}\", result);
-    println!(\"{{:.3f}}\", elapsed_time);
-    println!(\"{{:.1f}}\", mem_usage as f64 / 1024.0);
-}}
-", module_name = implementation_folder.module_name,
+    println!(\"{{:?}}\", result);",
+        module_name = implementation_folder.module_name,
         method_name = implementation_folder.method_name,
-        argument_string = argument_string);
+        argument_string = argument_string
+    )
+        + "println!(\"{}\", format!(\"{:.3}\", elapsed_time));"
+        + "println!(\"{}\", format!(\"{:.1}\", mem_usage as f64 / 1024.0 / 1024.0));"
+        + "}";
 
     wrapper_code
 }

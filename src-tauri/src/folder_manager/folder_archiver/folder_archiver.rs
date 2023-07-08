@@ -48,7 +48,11 @@ pub fn unzip_archive(archive_path: PathBuf) -> Result<(), std::io::Error> {
 
     for i in 0..archive.len() {
         let mut file = archive.by_index(i)?;
-        let outpath = new_dir_path.join(file.name());
+        let mut outpath = new_dir_path.join(file.name());
+
+        //to avoid the extracted implementations folder to be copied in the existing implementations
+        //instead I want to copy the content only
+        outpath = outpath.strip_prefix("implementations").unwrap().to_path_buf();
 
         if file.name().ends_with('/') {
             std::fs::create_dir_all(&outpath)?;
