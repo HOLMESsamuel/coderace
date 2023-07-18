@@ -20,6 +20,9 @@ let importedFiles = [];
 let writtenFiles = [];
 let argumentsList = [];
 
+let rustTypes = ['i32', 'i64', 'f32', 'f64', 'str', 'bool'];
+let pythonTypes = ['string', 'int'];
+
 class File {
     constructor(path, name, content, modifiable) {
         this.path = path;
@@ -113,14 +116,26 @@ function addArgumentLine(type, value) {
     }
     newArgumentRow.appendChild(newValueInput);
 
-    let newTypeInput = document.createElement('input');
-    newTypeInput.type = 'text';
-    newTypeInput.classList.add('argument-type');
-    newTypeInput.placeholder = 'Argument Type';
-    if(type != null) {
-        newTypeInput.value = type;
+    let newTypeSelect = document.createElement('select');
+    newTypeSelect.classList.add('argument-type');
+    // Define types depending on the language
+    let types = [];
+    if (languageName === 'rust') {
+        types = rustTypes;
+    } else if(languageName === 'python') {
+        types = pythonTypes;
     }
-    newArgumentRow.appendChild(newTypeInput);
+    // Add other languages and their types as necessary
+    types.forEach(function(typeOption) {
+        let option = document.createElement('option');
+        option.value = typeOption;
+        option.text = typeOption;
+        newTypeSelect.appendChild(option);
+    });
+    if(type != null) {
+        newTypeSelect.value = type;
+    }
+    newArgumentRow.appendChild(newTypeSelect);
 
     // Create delete button
     let deleteButton = document.createElement('button');

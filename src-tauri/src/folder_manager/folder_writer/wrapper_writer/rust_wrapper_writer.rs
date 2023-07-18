@@ -40,8 +40,11 @@ fn map_arguments_to_strings(arguments: &[Argument]) -> Vec<String> {
     arguments
         .iter()
         .map(|arg| match arg.argument_type.as_str() {
-            "int" => arg.value.clone(),
-            "string" => format!("\"{}\"", arg.value.trim_matches('\'').to_string()),
+            "i32" => arg.value.clone(),
+            "i64" => arg.value.clone(),
+            "f32" => arg.value.clone(),
+            "f64" => arg.value.clone(),
+            "str" => format!("\"{}\"", arg.value.trim_matches('\'').to_string()),
             _ => String::new(),
         })
         .collect()
