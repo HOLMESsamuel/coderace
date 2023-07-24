@@ -14,11 +14,30 @@
         <h2 id="implementation-title"></h2>
     </div>
     <div id="form">
-        <label for="method-name">Method Name</label>
+        <div class="input-label">
+            <label for="method-name">
+                Method Name
+                <div class="tooltip-container">
+                    <span class="help-icon">?</span>
+                    <span class="tooltip">Name of the entry method, the one you want to be benchmarked</span>
+                </div>
+            </label>
+        </div>
         <input type="text" id="method-name" class="input-small">
-        <label for="arguments-container">Arguments</label>
+
+
+        <div class="input-label">
+            <label for="arguments-container">
+                Arguments
+                <div class="tooltip-container">
+                    <span class="help-icon">?</span>
+                    <span class="tooltip">Values and types of the entry method arguments</span>
+                </div>
+            </label>
+        </div>
         <div id="arguments-container">
         </div>
+
         <button id="add-argument">Add Argument</button>
         <label for="file-name">File Name</label>
         <input type="text" id="file-name" class="input-small">
@@ -28,6 +47,10 @@
         <div>
             <button id="add-file-button" class="button">Add File</button>
             <button id="load-file-button" class="button">Load File from Computer</button>
+            <div class="tooltip-container">
+                <span class="help-icon">?</span>
+                <span class="tooltip">You can either write a file or import one, one of the files must contain your entry method</span>
+            </div>
         </div>
         <div id="file-list"></div>
         <div id="form-error" class="form-error"></div>
