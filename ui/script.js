@@ -46,12 +46,23 @@ addImplementationButton.addEventListener('click', () => {
     if (!languageInput.value || !versionInput.value || !implementationInput.value) {
         errorDiv.textContent = 'Please fill out all fields before adding the implementation.';
     } else if (/[ $]/.test(implementationInput.value)) {
-            errorDiv.textContent = 'The implementation name must not contain spaces or dollar signs ($).';
+        errorDiv.textContent = 'The implementation name must not contain spaces or dollar signs ($).';
+    } else if (implementationAlreadyExists(languageInput.value, versionInput.value, implementationInput.value)) {
+        errorDiv.textContent = 'This implementation already exists you can modify it.';
     } else {
         // The input fields are not empty, continue with adding the implementation
         addImplementation(languageInput.value, versionInput.value, implementationInput.value);
     }
 });
+
+function implementationAlreadyExists(languageName, versionName, implementationName) {
+    for (let implementation of (implementations[languageName]?.[versionName] || [])){
+        if(implementation === implementationName) {
+            return true;
+        }
+    }
+    return false;
+}
 
 languageDropdown.addEventListener("input", () => {
     switch (languageDropdown.value) {
